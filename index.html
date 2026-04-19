@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bíblia 365 · Zion</title>
+<meta name="theme-color" content="#080603">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bíblia 365">
+<meta name="description" content="Plano de leitura bíblica em 1 ano — Zion Church">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080603;--bg1:#111009;--bg2:#1A180F;--bg3:#221F14;
+  --gold:#C8A020;--gold2:#E8C84A;--golddim:#6A5510;--goldfaint:rgba(200,160,32,.10);
+  --cream:#EEE4C6;--dim:#8A7D5A;--dim2:#554E38;
+  --teal:#1E6A78;--red:#A03030;--green:#2E6E44;
+  --border:rgba(200,160,32,.12);--border2:rgba(200,160,32,.28);
+  --r:16px;--nav:68px;
+  --ff:'Playfair Display',Georgia,serif;
+  --fb:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--cream);font-family:var(--fb);overflow:hidden}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative}
+.screen{display:none;flex:1;overflow-y:auto;padding-bottom:var(--nav);scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{display:block}
+
+/* ── NAV ── */
+#bnav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;height:var(--nav);
+  background:rgba(8,6,3,.96);backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-around;
+  z-index:100;padding-bottom:env(safe-area-inset-bottom)
+}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 0;background:none;border:none;cursor:pointer;
+  color:var(--dim);font-family:var(--fb);font-size:10px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.06em;transition:color .2s}
+.nb.on{color:var(--gold)}
+.nb svg{width:21px;height:21px}
+
+/* ── HOME ── */
+.hdr{
+  padding:52px 22px 18px;
+  background:linear-gradient(180deg,rgba(200,160,32,.07) 0%,transparent 100%);
+  border-bottom:1px solid var(--border);position:relative;overflow:hidden
+}
+.hdr::after{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,160,32,.06),transparent 70%);
+  pointer-events:none
+}
+.grt{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
+.htitle{font-family:var(--ff);font-size:26px;font-weight:600;color:var(--cream);line-height:1.2}
+
+.statsrow{display:flex;gap:10px;padding:14px 22px}
+.spill{
+  flex:1;background:var(--bg1);border:1px solid var(--border);
+  border-radius:12px;padding:11px 8px;text-align:center
+}
+.spill .v{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--gold);line-height:1}
+.spill .l{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+.xpsec{padding:0 22px 14px}
+.xphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.xplvl{font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.xppts{font-size:11px;color:var(--dim)}
+.xpbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.xpfill{height:100%;background:linear-gradient(90deg,var(--golddim),var(--gold));border-radius:3px;transition:width .8s ease}
+
+.tcard{
+  margin:0 22px 14px;background:var(--bg1);
+  border:1px solid var(--border2);border-radius:var(--r);
+  padding:22px;position:relative;overflow:hidden
+}
+.tcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--golddim),var(--gold2),var(--golddim))
+}
+.tlbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:7px}
+.treading{font-family:var(--ff);font-size:28px;font-weight:600;color:var(--cream);line-height:1.15;margin-bottom:5px}
+.tsub{font-size:12px;color:var(--dim);margin-bottom:18px}
+
+.btnok{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--golddim),var(--gold));
+  border:none;border-radius:10px;
+  font-family:var(--fb);font-size:13px;font-weight:700;
+  color:#080603;cursor:pointer;letter-spacing:.03em;
+  transition:opacity .2s,transform .1s
+}
+.btnok:active{transform:scale(.98)}
+.btnok:disabled,.btnok.done{background:var(--green);color:#fff;cursor:default}
+
+.strkbox{
+  margin:0 22px 14px;background:var(--bg1);border:1px solid var(--border);
+  border-radius:var(--r);padding:15px 18px;display:flex;align-items:center;gap:14px
+}
+.sflame{font-size:32px;line-height:1}
+.sinfo{flex:1}
+.snum{font-family:var(--ff);font-size:30px;font-weight:700;color:var(--gold);line-height:1}
+.slbl{font-size:11px;color:var(--dim);margin-top:2px}
+.sbest{text-align:right;font-size:10px;color:var(--dim)}
+.sbest span{display:block;font-size:16px;font-weight:700;color:var(--cream)}
+
+.recdays{padding:0 22px 24px}
+.recdays h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:10px}
+.drow{display:flex;gap:5px}
+.ddot{
+  flex:1;aspect-ratio:1;border-radius:7px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;line-height:1.2
+}
+.ddot.done{background:var(--gold);color:#080603}
+.ddot.today{background:var(--bg2);border:2px solid var(--gold);color:var(--gold)}
+.ddot.miss{background:rgba(160,48,48,.15);border:1px solid var(--red);color:var(--red)}
+.ddot.fut{background:var(--bg1);border:1px solid var(--border);color:var(--dim2)}
+
+/* ── PLANO ── */
+.shdr{
+  padding:52px 22px 0;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg);z-index:10
+}
+.stitle{font-family:var(--ff);font-size:26px;font-weight:700;color:var(--cream)}
+.ssub{font-size:12px;color:var(--dim);margin-top:3px;padding-bottom:12px}
+.mtabs{
+  display:flex;gap:7px;overflow-x:auto;padding:10px 22px;
+  scrollbar-width:none;border-bottom:1px solid var(--border)
+}
+.mtabs::-webkit-scrollbar{display:none}
+.mtab{
+  flex-shrink:0;padding:5px 12px;border-radius:20px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--dim);font-family:var(--fb);font-size:11px;font-weight:500;
+  cursor:pointer;transition:all .2s
+}
+.mtab.on{background:var(--gold);border-color:var(--gold);color:#080603;font-weight:700}
+.plist{padding:0 22px 24px}
+.pitem{
+  display:flex;align-items:center;gap:11px;padding:12px 0;
+  border-bottom:1px solid var(--border);cursor:pointer
+}
+.pitem:last-child{border-bottom:none}
+.pdnum{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0
+}
+.pdnum.done{background:var(--gold);color:#080603}
+.pdnum.today{background:var(--bg2);border:2px solid var(--gold);color:var(--gold)}
+.pdnum.miss{background:rgba(160,48,48,.15);color:var(--red)}
+.pdnum.fut{background:var(--bg1);color:var(--dim)}
+.pinfo{flex:1}
+.prtext{font-size:14px;font-weight:500;color:var(--cream)}
+.prtext.done{color:var(--dim)}
+.pdate{font-size:11px;color:var(--dim);margin-top:1px}
+.pchk{
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s
+}
+.pchk.on{background:var(--gold);border-color:var(--gold)}
+
+/* ── PROGRESSO ── */
+.phero{padding:36px 22px 20px;display:flex;flex-direction:column;align-items:center}
+.ringwrap{position:relative;width:172px;height:172px;margin-bottom:14px}
+.ringwrap svg{transform:rotate(-90deg);width:172px;height:172px}
+.rctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rpct{font-family:var(--ff);font-size:38px;font-weight:700;color:var(--gold);line-height:1}
+.rptlbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.pphrase{font-family:var(--ff);font-style:italic;font-size:14px;color:var(--dim);text-align:center;max-width:230px;line-height:1.5}
+
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 22px 20px}
+.pstat{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:15px}
+.pstat .ic{font-size:20px;margin-bottom:7px}
+.pstat .vv{font-family:var(--ff);font-size:26px;font-weight:700;color:var(--cream);line-height:1}
+.pstat .ll{font-size:10px;color:var(--dim);margin-top:3px}
+
+.secsec{padding:0 22px 20px}
+.sectitle{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:11px}
+.secitem{margin-bottom:12px}
+.sechdr{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px}
+.secname{color:var(--cream);font-weight:500}
+.secpct{color:var(--gold);font-weight:600}
+.secbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.secfill{height:100%;background:linear-gradient(90deg,var(--golddim),var(--gold));border-radius:3px;transition:width .8s ease}
+
+.heatsec{padding:0 22px 24px}
+.heattitle{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:10px}
+.hgrid{display:grid;grid-template-columns:repeat(26,1fr);gap:2px}
+.hcell{aspect-ratio:1;border-radius:2px}
+.hcell.done{background:var(--gold);opacity:.85}
+.hcell.today{background:var(--teal)}
+.hcell.miss{background:var(--red);opacity:.35}
+.hcell.fut{background:var(--bg2)}
+
+/* ── CONQUISTAS ── */
+.agrid{padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.bcard{
+  background:var(--bg1);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 14px;text-align:center;transition:border-color .2s
+}
+.bcard.on{border-color:var(--golddim);background:linear-gradient(135deg,var(--bg1),rgba(200,160,32,.05))}
+.bcard.off{opacity:.38}
+.bicon{font-size:34px;margin-bottom:8px;display:block}
+.bname{font-size:12px;font-weight:600;color:var(--cream);margin-bottom:3px;line-height:1.2}
+.bdesc{font-size:10px;color:var(--dim);line-height:1.4}
+.bunlk{margin-top:7px;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+
+/* ── CONFIG ── */
+.csec{padding:0 22px 20px}
+.csec h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin:20px 0 10px}
+.citem{
+  background:var(--bg1);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;margin-bottom:7px;
+  display:flex;align-items:center;justify-content:space-between
+}
+.cileft{flex:1}
+.cilbl{font-size:14px;color:var(--cream);font-weight:500}
+.cisub{font-size:11px;color:var(--dim);margin-top:2px}
+.cinput{
+  background:transparent;border:none;color:var(--gold);
+  font-family:var(--fb);font-size:13px;font-weight:600;
+  text-align:right;width:110px;outline:none
+}
+input[type=time].cinput{width:90px}
+.tog{
+  width:42px;height:24px;border-radius:12px;
+  background:var(--bg2);border:2px solid var(--border2);
+  cursor:pointer;position:relative;transition:background .2s;flex-shrink:0
+}
+.tog.on{background:var(--gold);border-color:var(--gold)}
+.tog::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--bg1);transition:transform .2s
+}
+.tog.on::after{transform:translateX(18px);background:#080603}
+.btndanger{
+  width:100%;padding:13px;background:transparent;
+  border:1px solid var(--red);border-radius:10px;
+  color:var(--red);font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer
+}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:calc(var(--nav) + 14px);left:50%;
+  transform:translateX(-50%) translateY(14px);
+  background:var(--gold);color:#080603;
+  padding:11px 18px;border-radius:12px;font-size:13px;font-weight:700;
+  opacity:0;transition:opacity .25s,transform .25s;z-index:200;white-space:nowrap
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── CELEBRATION ── */
+#cel{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(8,6,3,.85);backdrop-filter:blur(8px);z-index:300;
+  opacity:0;pointer-events:none;transition:opacity .3s
+}
+#cel.show{opacity:1;pointer-events:auto}
+.celbox{
+  background:var(--bg1);border:1px solid var(--border2);border-radius:20px;
+  padding:36px 32px;text-align:center;max-width:280px;
+  transform:scale(.9);transition:transform .3s
+}
+#cel.show .celbox{transform:scale(1)}
+.celicon{font-size:52px;margin-bottom:12px}
+.celtitle{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.celmsg{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:20px}
+.celclose{
+  padding:11px 28px;background:var(--gold);border:none;border-radius:10px;
+  font-family:var(--fb);font-size:13px;font-weight:700;color:#080603;cursor:pointer
+}
+
+/* ── PARTICLES ── */
+canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:250}
+
+/* ── EMPTY STATE ── */
+.empty{padding:40px 22px;text-align:center}
+.empty .eic{font-size:48px;margin-bottom:12px}
+.empty h3{font-family:var(--ff);font-size:20px;color:var(--cream);margin-bottom:6px}
+.empty p{font-size:13px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME -->
+<div id="s-home" class="screen active">
+  <div class="hdr">
+    <div class="grt" id="grt">Bom dia</div>
+    <div class="htitle" id="htitle">Leitura de Hoje</div>
+  </div>
+  <div class="statsrow">
+    <div class="spill"><div class="v" id="s-read">0</div><div class="l">Lidos</div></div>
+    <div class="spill"><div class="v" id="s-rem">365</div><div class="l">Restantes</div></div>
+    <div class="spill"><div class="v" id="s-adv">0</div><div class="l" id="s-adv-l">Adiant.</div></div>
+  </div>
+  <div class="xpsec">
+    <div class="xphdr"><span class="xplvl" id="xplvl">Semente</span><span class="xppts" id="xppts">0 XP</span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill" style="width:0%"></div></div>
+  </div>
+  <div class="tcard">
+    <div class="tlbl">📖 DIA <span id="tdaynum">1</span> · <span id="tdatestr">01 JAN</span></div>
+    <div class="treading" id="treading">Gênesis 1-3</div>
+    <div class="tsub" id="tsect">Pentateuco</div>
+    <button class="btnok" id="btnok" onclick="toggleToday()">Marcar como lido ✓</button>
+  </div>
+  <div class="strkbox">
+    <div class="sflame">🔥</div>
+    <div class="sinfo">
+      <div class="snum" id="snum">0</div>
+      <div class="slbl">dias seguidos</div>
+    </div>
+    <div class="sbest"><span id="sbest">0</span>recorde</div>
+  </div>
+  <div class="recdays">
+    <h3>Últimos 14 dias</h3>
+    <div class="drow" id="drow"></div>
+  </div>
+</div>
+
+<!-- PLANO -->
+<div id="s-plano" class="screen">
+  <div class="shdr">
+    <div class="stitle">Plano de Leitura</div>
+    <div class="ssub" id="planosub">365 dias · Bíblia completa em 2026</div>
+    <div class="mtabs" id="mtabs"></div>
+  </div>
+  <div class="plist" id="plist"></div>
+</div>
+
+<!-- PROGRESSO -->
+<div id="s-prog" class="screen">
+  <div class="shdr">
+    <div class="stitle">Progresso</div>
+    <div class="ssub">Sua jornada em 2026</div>
+  </div>
+  <div class="phero">
+    <div class="ringwrap">
+      <svg viewBox="0 0 172 172">
+        <defs>
+          <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#6A5510"/>
+            <stop offset="100%" style="stop-color:#E8C84A"/>
+          </linearGradient>
+        </defs>
+        <circle fill="none" stroke="var(--bg2)" stroke-width="11" cx="86" cy="86" r="74"/>
+        <circle id="pring" fill="none" stroke="url(#gg)" stroke-width="11" cx="86" cy="86" r="74"
+          stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465"/>
+      </svg>
+      <div class="rctr"><div class="rpct" id="rpct">0%</div><div class="rptlbl">completo</div></div>
+    </div>
+    <div class="pphrase" id="pphrase">"Lâmpada para os meus pés é a tua palavra"</div>
+  </div>
+  <div class="pgrid">
+    <div class="pstat"><div class="ic">📚</div><div class="vv" id="pg-read">0</div><div class="ll">Dias lidos</div></div>
+    <div class="pstat"><div class="ic">🔥</div><div class="vv" id="pg-strk">0</div><div class="ll">Sequência atual</div></div>
+    <div class="pstat"><div class="ic">⚡</div><div class="vv" id="pg-xp">0</div><div class="ll">XP acumulado</div></div>
+    <div class="pstat"><div class="ic">🏆</div><div class="vv" id="pg-bdg">0</div><div class="ll">Conquistas</div></div>
+  </div>
+  <div class="secsec">
+    <div class="sectitle">Seções da Bíblia</div>
+    <div id="seclist"></div>
+  </div>
+  <div class="heatsec">
+    <div class="heattitle">Calendário 2026</div>
+    <div class="hgrid" id="hgrid"></div>
+  </div>
+</div>
+
+<!-- CONQUISTAS -->
+<div id="s-conq" class="screen">
+  <div class="shdr">
+    <div class="stitle">Conquistas</div>
+    <div class="ssub" id="bdgsub">0 / 12 desbloqueadas</div>
+  </div>
+  <div class="agrid" id="agrid"></div>
+</div>
+
+<!-- CONFIG -->
+<div id="s-cfg" class="screen">
+  <div class="shdr"><div class="stitle">Configurações</div><div class="ssub">Personalize sua experiência</div></div>
+  <div class="csec">
+    <h3>Perfil</h3>
+    <div class="citem">
+      <div class="cileft"><div class="cilbl">Seu nome</div><div class="cisub">Aparece no cabeçalho</div></div>
+      <input type="text" class="cinput" id="cfgname" placeholder="Seu nome" oninput="saveName(this.value)">
+    </div>
+    <h3>Notificações</h3>
+    <div class="citem">
+      <div class="cileft"><div class="cilbl">Lembrete diário</div><div class="cisub" id="remsub">Desativado</div></div>
+      <div class="tog" id="remtog" onclick="toggleReminder()"></div>
+    </div>
+    <div class="citem" id="remtimebox" style="display:none">
+      <div class="cileft"><div class="cilbl">Horário do lembrete</div></div>
+      <input type="time" class="cinput" id="remtime" value="07:00" onchange="saveReminderTime(this.value)">
+    </div>
+    <h3>Sobre o plano</h3>
+    <div class="citem">
+      <div class="cileft"><div class="cilbl">Igreja</div></div>
+      <span style="color:var(--dim);font-size:12px">Zion Church</span>
+    </div>
+    <div class="citem">
+      <div class="cileft"><div class="cilbl">Ano</div></div>
+      <span style="color:var(--dim);font-size:12px">2026</span>
+    </div>
+    <div class="citem">
+      <div class="cileft"><div class="cilbl">Dias lidos</div></div>
+      <span style="color:var(--gold);font-size:14px;font-weight:700" id="cfgread">0</span>
+    </div>
+    <h3>Dados</h3>
+    <div class="citem" onclick="exportProgress()" style="cursor:pointer">
+      <div class="cileft"><div class="cilbl">Exportar progresso</div><div class="cisub">Salvar como texto</div></div>
+      <span style="color:var(--gold);font-size:18px">↗</span>
+    </div>
+    <button class="btndanger" onclick="confirmReset()">⚠ Zerar progresso</button>
+  </div>
+  <div style="text-align:center;padding:16px 22px 32px;color:var(--dim2);font-size:11px;line-height:2">
+    Bíblia 365 · Zion Church · 2026<br>
+    <span style="color:var(--golddim);letter-spacing:8px">✦ ✦ ✦</span><br>
+    zionchurch.org.br
+  </div>
+</div>
+
+<nav id="bnav">
+  <button class="nb on" onclick="nav('home')" id="nb-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    Início
+  </button>
+  <button class="nb" onclick="nav('plano')" id="nb-plano">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>
+    Plano
+  </button>
+  <button class="nb" onclick="nav('prog')" id="nb-prog">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Progresso
+  </button>
+  <button class="nb" onclick="nav('conq')" id="nb-conq">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+    Conquistas
+  </button>
+  <button class="nb" onclick="nav('cfg')" id="nb-cfg">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Config
+  </button>
+</nav>
+</div><!-- #app -->
+
+<div id="toast">✓ Leitura marcada! +10 XP</div>
+<canvas id="ptcl"></canvas>
+<div id="cel">
+  <div class="celbox">
+    <div class="celicon" id="celicon">🏆</div>
+    <div class="celtitle" id="celtitle">Conquista!</div>
+    <div class="celmsg" id="celmsg">Você desbloqueou uma nova conquista.</div>
+    <button class="celclose" onclick="closeCel()">Incrível!</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════
+// READING PLAN — 365 DAYS
+// ════════════════════════════════════
+const READINGS = [
+  "Gênesis 1-3","Gênesis 4-6","Gênesis 7-9","Gênesis 10-12","Gênesis 13-16",
+  "Gênesis 17-19","Gênesis 20-22","Gênesis 23-24","Gênesis 25-27","Gênesis 28-30",
+  "Gênesis 31-32","Gênesis 33-35","Gênesis 36-37","Gênesis 38-40","Gênesis 41-42",
+  "Gênesis 43-45","Gênesis 46-47","Gênesis 48-50","Êxodo 1-4","Êxodo 5-7",
+  "Êxodo 8-10","Êxodo 11-13","Êxodo 14-16","Êxodo 17-20","Êxodo 21-23",
+  "Êxodo 24-26","Êxodo 27-29","Êxodo 30-32","Êxodo 33-35","Êxodo 36-38",
+  "Êxodo 39-40","Levítico 1-4","Levítico 5-7","Levítico 8-10","Levítico 11-13",
+  "Levítico 14-15","Levítico 16-18","Levítico 19-21","Levítico 22-23","Levítico 24-25",
+  "Levítico 26-27","Números 1-2","Números 3-4","Números 5-7","Números 8-10",
+  "Números 11-13","Números 14-15","Números 16-18","Números 19-21","Números 22-24",
+  "Números 25-26","Números 27-29","Números 30-32","Números 33-34","Números 35-36",
+  "Deuteronômio 1-2","Deuteronômio 3-4","Deuteronômio 5-7","Deuteronômio 8-11","Deuteronômio 12-14",
+  "Deuteronômio 15-18","Deuteronômio 19-22","Deuteronômio 23-26","Deuteronômio 27-28","Deuteronômio 29-31",
+  "Deuteronômio 32-34","Josué 1-4","Josué 5-8","Josué 9-11","Josué 12-14",
+  "Josué 15-16","Josué 17-19","Josué 20-22","Josué 23-24","Juízes 1-3",
+  "Juízes 4-6","Juízes 7-9","Juízes 10-12","Juízes 13-16","Juízes 17-19",
+  "Juízes 20-21","Rute 1-4","1 Samuel 1-3","1 Samuel 4-7","1 Samuel 8-10",
+  "1 Samuel 11-14","1 Samuel 15-17","1 Samuel 18-20","1 Samuel 21-24","1 Samuel 25-27",
+  "1 Samuel 28-31","2 Samuel 1-3","2 Samuel 4-7","2 Samuel 8-11","2 Samuel 12-14",
+  "2 Samuel 15-17","2 Samuel 18-19","2 Samuel 20-22","2 Samuel 23-24","1 Reis 1-2",
+  "1 Reis 3-5","1 Reis 6-7","1 Reis 8-9","1 Reis 10-11","1 Reis 12-14",
+  "1 Reis 15-17","1 Reis 18-20","1 Reis 21-22","2 Reis 1-4","2 Reis 5-7",
+  "2 Reis 8-10","2 Reis 11-14","2 Reis 15-17","2 Reis 18-19","2 Reis 20-23",
+  "2 Reis 24-25","1 Crônicas 1-2","1 Crônicas 3-5","1 Crônicas 6","1 Crônicas 7-8",
+  "1 Crônicas 9-11","1 Crônicas 12-15","1 Crônicas 16-18","1 Crônicas 19-22","1 Crônicas 23-25",
+  "1 Crônicas 26-29","2 Crônicas 1-4","2 Crônicas 5-7","2 Crônicas 8-11","2 Crônicas 12-15",
+  "2 Crônicas 16-19","2 Crônicas 20-23","2 Crônicas 24-26","2 Crônicas 27-29","2 Crônicas 30-32",
+  "2 Crônicas 33-36","Esdras 1-2","Esdras 3-6","Esdras 7-10","Neemias 1-4",
+  "Neemias 5-7","Neemias 8-10","Neemias 11-13","Ester 1-4","Ester 5-10",
+  "Jó 1-2","Jó 3-5","Jó 6-8","Jó 9-11","Jó 12-15",
+  "Jó 16-20","Jó 21-25","Jó 26-28","Jó 29-31","Jó 32-34",
+  "Jó 35-37","Jó 38-40","Jó 41-42","Salmos 1-7","Salmos 8-14",
+  "Salmos 15-18","Salmos 19-23","Salmos 24-29","Salmos 30-34","Salmos 35-37",
+  "Salmos 38-42","Salmos 43-47","Salmos 48-53","Salmos 54-59","Salmos 60-66",
+  "Salmos 67-69","Salmos 70-73","Salmos 74-78","Salmos 79-83","Salmos 84-89",
+  "Salmos 90-94","Salmos 95-102","Salmos 103-105","Salmos 106-107","Salmos 108-113",
+  "Salmos 114-118","Salmos 119","Salmos 120-130","Salmos 131-136","Salmos 137-143",
+  "Salmos 144-148","Salmos 149-150","Provérbios 1-3","Provérbios 4-6","Provérbios 7-9",
+  "Provérbios 10-12","Provérbios 13-15","Provérbios 16-18","Provérbios 19-21","Provérbios 22-24",
+  "Provérbios 25-27","Provérbios 28-31","Eclesiastes 1-4","Eclesiastes 5-8","Eclesiastes 9-12",
+  "Cantares 1-5","Cantares 6-8","Isaías 1-3","Isaías 4-7","Isaías 8-10",
+  "Isaías 11-14","Isaías 15-20","Isaías 21-24","Isaías 25-28","Isaías 29-32",
+  "Isaías 33-36","Isaías 37-40","Isaías 41-43","Isaías 44-47","Isaías 48-51",
+  "Isaías 52-57","Isaías 58-62","Isaías 63-66","Jeremias 1-3","Jeremias 4-6",
+  "Jeremias 7-9","Jeremias 10-13","Jeremias 14-17","Jeremias 18-22","Jeremias 23-25",
+  "Jeremias 26-29","Jeremias 30-32","Jeremias 33-36","Jeremias 37-40","Jeremias 41-44",
+  "Jeremias 45-48","Jeremias 49-50","Jeremias 51-52","Lamentações 1-3","Lamentações 4-5",
+  "Ezequiel 1-4","Ezequiel 5-8","Ezequiel 9-12","Ezequiel 13-16","Ezequiel 17-20",
+  "Ezequiel 21-23","Ezequiel 24-27","Ezequiel 28-30","Ezequiel 31-33","Ezequiel 34-36",
+  "Ezequiel 37-39","Ezequiel 40-42","Ezequiel 43-45","Ezequiel 46-48","Daniel 1-3",
+  "Daniel 4-6","Daniel 7-9","Daniel 10-12","Oséias 1-5","Oséias 6-10",
+  "Oséias 11-14","Joel 1-3","Amós 1-5","Amós 6-9","Obadias 1",
+  "Jonas 1-4","Miquéias 1-7","Naum 1-3","Habacuque 1-3","Sofonias 1-3",
+  "Ageu 1-2","Zacarias 1-6","Zacarias 7-11","Zacarias 12-14","Malaquias 1-4",
+  "Mateus 1-4","Mateus 5-6","Mateus 7-9","Mateus 10-11","Mateus 12-13",
+  "Mateus 14-15","Mateus 16-18","Mateus 19-21","Mateus 22-23","Mateus 24-25",
+  "Mateus 26","Mateus 27-28","Marcos 1-2","Marcos 3-4","Marcos 5-6",
+  "Marcos 7-8","Marcos 9-10","Marcos 11-12","Marcos 13-14","Marcos 15-16",
+  "Lucas 1","Lucas 2-3","Lucas 4-5","Lucas 6-7","Lucas 8-9",
+  "Lucas 10-11","Lucas 12-13","Lucas 14-16","Lucas 17-18","Lucas 19-20",
+  "Lucas 21-22","Lucas 23-24","João 1-2","João 3-4","João 5-6",
+  "João 7-8","João 9-10","João 11-12","João 13-15","João 16-18",
+  "João 19-21","Atos 1-2","Atos 3-5","Atos 6-7","Atos 8-9",
+  "Atos 10-11","Atos 12-13","Atos 14-16","Atos 17-19","Atos 20-21",
+  "Atos 22-24","Atos 25-28","Romanos 1-3","Romanos 4-7","Romanos 8-9",
+  "Romanos 10-12","Romanos 13-16","1 Coríntios 1-4","1 Coríntios 5-7","1 Coríntios 8-10",
+  "1 Coríntios 11-13","1 Coríntios 14-16","2 Coríntios 1-4","2 Coríntios 5-8","2 Coríntios 9-13",
+  "Gálatas 1-3","Gálatas 4-6","Efésios 1-4","Efésios 5-6","Filipenses 1-4",
+  "Colossenses 1-4","1 Tessalonicenses 1-5","2 Tessalonicenses 1-3","1 Timóteo 1-6","2 Timóteo 1-4",
+  "Tito 1-3","Filemom 1","Hebreus 1-5","Hebreus 6-9","Hebreus 10-11",
+  "Hebreus 12-13","Tiago 1-5","1 Pedro 1-3","1 Pedro 4-5","2 Pedro 1-3",
+  "1 João 1-5","2 João 1","3 João 1","Judas 1","Apocalipse 1-4",
+  "Apocalipse 5-8","Apocalipse 9-12","Apocalipse 13-16","Apocalipse 17-19","Apocalipse 20-22"
+];
+
+const MONTHS = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+// day 1 boundaries per month (1-indexed day of plan)
+const MSTART = [1,32,60,91,121,152,182,213,244,274,305,335];
+const MEND   = [31,59,90,120,151,181,212,243,273,304,334,365];
+
+const SECTIONS = [
+  {name:"Pentateuco", icon:"📜", s:1,  e:66},
+  {name:"Históricos", icon:"🏛️", s:67, e:145},
+  {name:"Poéticos",   icon:"🎵", s:146,e:202},
+  {name:"Profetas",   icon:"🌩️", s:203,e:270},
+  {name:"Evangelhos", icon:"✝️", s:271,e:311},
+  {name:"NT & Cartas",icon:"📨", s:312,e:365},
+];
+
+function sectionOf(d){
+  for(const s of SECTIONS) if(d>=s.s && d<=s.e) return s.name;
+  return "";
+}
+
+const LEVELS=[
+  {name:"Semente",   min:0,   max:600},
+  {name:"Discípulo", min:600, max:1500},
+  {name:"Profeta",   min:1500,max:3000},
+  {name:"Apóstolo",  min:3000,max:5500},
+  {name:"Guardião",  min:5500,max:10000},
+];
+
+const BADGES = [
+  {id:"first",  icon:"🌱", name:"Primeira Leitura",    desc:"Completou o 1º dia",           check:s=>s.has(1)},
+  {id:"week",   icon:"🔥", name:"Fogo Aceso",           desc:"7 dias consecutivos",           check:(_,b)=>b>=7},
+  {id:"30d",    icon:"⚡", name:"Perseverança",         desc:"30 dias consecutivos",          check:(_,b)=>b>=30},
+  {id:"penta",  icon:"📜", name:"Pentateuco",           desc:"Dias 1–66 completos",           check:s=>range(1,66).every(d=>s.has(d))},
+  {id:"hist",   icon:"🏛️", name:"Livros Históricos",   desc:"Dias 67–145 completos",         check:s=>range(67,145).every(d=>s.has(d))},
+  {id:"psalms", icon:"🎵", name:"Salmista",             desc:"Todos os Salmos lidos",         check:s=>range(159,187).every(d=>s.has(d))},
+  {id:"100d",   icon:"💎", name:"Centenário",           desc:"100 dias lidos",                check:s=>s.size>=100},
+  {id:"half",   icon:"🌟", name:"Meio Caminho",         desc:"183 dias lidos",                check:s=>s.size>=183},
+  {id:"proph",  icon:"🌩️", name:"Profetas",            desc:"Dias 203–270 completos",        check:s=>range(203,270).every(d=>s.has(d))},
+  {id:"gosp",   icon:"✝️", name:"Evangelhos",          desc:"Mateus, Marcos, Lucas e João",  check:s=>range(271,311).every(d=>s.has(d))},
+  {id:"nt",     icon:"📨", name:"NT Completo",          desc:"Dias 312–365 completos",        check:s=>range(312,365).every(d=>s.has(d))},
+  {id:"full",   icon:"🏆", name:"Guardião da Palavra",  desc:"Todos os 365 dias! Aleluia!",  check:s=>s.size>=365},
+];
+
+const PHRASES=[
+  '"Lâmpada para os meus pés é a tua palavra" — Sl 119:105',
+  '"Medita nele dia e noite" — Js 1:8',
+  '"Tua palavra é a verdade" — Jo 17:17',
+  '"A fé vem pelo ouvir a palavra" — Rm 10:17',
+  '"Não só de pão viverá o homem" — Mt 4:4',
+];
+
+function range(a,b){return Array.from({length:b-a+1},(_,i)=>a+i)}
+
+// ════════════════════════════════════
+// STATE
+// ════════════════════════════════════
+let S = {
+  completed: new Set(),
+  bestStreak: 0,
+  xp: 0,
+  name: "",
+  remOn: false,
+  remTime: "07:00",
+  unlockedBadges: new Set(),
+};
+
+function save(){
+  localStorage.setItem('b365v2', JSON.stringify({
+    completed:[...S.completed],
+    bestStreak:S.bestStreak,
+    xp:S.xp,
+    name:S.name,
+    remOn:S.remOn,
+    remTime:S.remTime,
+    unlockedBadges:[...S.unlockedBadges],
+  }));
+}
+
+function load(){
+  try{
+    const r=localStorage.getItem('b365v2');
+    if(!r) return;
+    const d=JSON.parse(r);
+    S.completed=new Set(d.completed||[]);
+    S.bestStreak=d.bestStreak||0;
+    S.xp=d.xp||0;
+    S.name=d.name||'';
+    S.remOn=d.remOn||false;
+    S.remTime=d.remTime||'07:00';
+    S.unlockedBadges=new Set(d.unlockedBadges||[]);
+  }catch(e){}
+}
+
+function calcStreak(){
+  const today=todayDay();
+  let streak=0,d=today;
+  while(S.completed.has(d)&&d>=1){streak++;d--;}
+  // also count backward from yesterday if today not done
+  if(!S.completed.has(today)){
+    let d2=today-1;while(d2>=1&&S.completed.has(d2)){streak++;d2--;}
+    // but then streak breaks after today
+    if(!S.completed.has(today)) streak=0;
+    // recalc properly
+    streak=0;let dd=today-1;
+    while(dd>=1&&S.completed.has(dd)){streak++;dd--;}
+  }
+  // redo: count from today backward
+  streak=0;let dd=today;
+  while(dd>=1&&S.completed.has(dd)){streak++;dd--;}
+  if(!S.completed.has(today)){
+    streak=0;dd=today-1;
+    while(dd>=1&&S.completed.has(dd)){streak++;dd--;}
+  }
+  S.streak=streak;
+  S.bestStreak=Math.max(S.bestStreak,streak);
+}
+
+function todayDay(){
+  const now=new Date();
+  const start=new Date(2026,0,1);
+  const diff=Math.floor((now-start)/(864e5))+1;
+  return Math.max(1,Math.min(365,diff));
+}
+
+function dayDate(d){
+  const dt=new Date(2026,0,d);
+  const dd=String(dt.getDate()).padStart(2,'0');
+  const mm=MONTHS[dt.getMonth()];
+  return `${dd}/${mm}`;
+}
+
+function dayMonth(d){
+  return new Date(2026,0,d).getMonth();
+}
+
+// ════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════
+let curScreen='home';
+function nav(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('active');
+  document.getElementById('nb-'+id).classList.add('on');
+  curScreen=id;
+  if(id==='prog') renderProg();
+  if(id==='conq') renderConq();
+  if(id==='plano') renderPlano();
+  if(id==='cfg') renderCfg();
+}
+
+// ════════════════════════════════════
+// HOME RENDER
+// ════════════════════════════════════
+function renderHome(){
+  const today=todayDay();
+  const rd=READINGS[today-1];
+  const h=new Date().getHours();
+  const grt=h<12?'Bom dia':'h<18?Boa tarde':'Boa noite';
+  const grts=h<12?'Bom dia ☀️':h<18?'Boa tarde 🌤️':'Boa noite 🌙';
+  document.getElementById('grt').textContent=S.name?`${grts}, ${S.name}`:(grts);
+  document.getElementById('htitle').textContent='Leitura de Hoje';
+  document.getElementById('tdaynum').textContent=today;
+  document.getElementById('tdatestr').textContent=dayDate(today);
+  document.getElementById('treading').textContent=rd;
+  document.getElementById('tsect').textContent=sectionOf(today);
+
+  const done=S.completed.has(today);
+  const btn=document.getElementById('btnok');
+  btn.textContent=done?'✓ Lido hoje!':'Marcar como lido ✓';
+  btn.className='btnok'+(done?' done':'');
+
+  // stats
+  const total=S.completed.size;
+  const rem=365-total;
+  const shouldHaveDone=today;
+  const adv=total-shouldHaveDone;
+  document.getElementById('s-read').textContent=total;
+  document.getElementById('s-rem').textContent=rem;
+  document.getElementById('s-adv').textContent=Math.abs(adv);
+  document.getElementById('s-adv-l').textContent=adv>=0?'Adiant.':'Atraso';
+
+  // XP + level
+  const lvl=getLevel();
+  document.getElementById('xplvl').textContent=lvl.name;
+  document.getElementById('xppts').textContent=S.xp+' XP';
+  const pct=Math.min(100,((S.xp-lvl.min)/(lvl.max-lvl.min))*100);
+  document.getElementById('xpfill').style.width=pct+'%';
+
+  // streak
+  calcStreak();
+  document.getElementById('snum').textContent=S.streak;
+  document.getElementById('sbest').textContent=S.bestStreak;
+
+  // recent 14 days
+  const row=document.getElementById('drow');
+  row.innerHTML='';
+  for(let i=13;i>=0;i--){
+    const d=today-i;
+    if(d<1){const el=document.createElement('div');el.className='ddot fut';row.appendChild(el);continue;}
+    const el=document.createElement('div');
+    const dt=new Date(2026,0,d);
+    el.dataset.day=d;
+    if(d===today) el.className='ddot today';
+    else if(S.completed.has(d)) el.className='ddot done';
+    else if(d<today) el.className='ddot miss';
+    else el.className='ddot fut';
+    el.innerHTML=`<span>${dt.getDate()}</span><span style="font-size:7px">${MONTHS[dt.getMonth()]}</span>`;
+    el.onclick=()=>toggleDay(d);
+    row.appendChild(el);
+  }
+}
+
+function getLevel(){
+  for(const l of LEVELS) if(S.xp>=l.min&&S.xp<l.max) return l;
+  return LEVELS[LEVELS.length-1];
+}
+
+// ════════════════════════════════════
+// TOGGLE DAY
+// ════════════════════════════════════
+function toggleToday(){toggleDay(todayDay());}
+
+function toggleDay(d){
+  const wasCompleted=S.completed.has(d);
+  if(wasCompleted){
+    S.completed.delete(d);
+    S.xp=Math.max(0,S.xp-15);
+    toast('Leitura desmarcada');
+  } else {
+    S.completed.add(d);
+    const bonus=(d===todayDay())?5:0;
+    S.xp+=10+bonus;
+    calcStreak();
+    S.bestStreak=Math.max(S.bestStreak,S.streak);
+    const msg=bonus>0?'✓ Leitura marcada! +15 XP':'✓ Marcado! +10 XP';
+    toast(msg);
+    checkBadges();
+    checkStreakCelebration();
+  }
+  calcStreak();
+  save();
+  renderHome();
+  if(curScreen==='plano') renderPlano(false);
+}
+
+function checkStreakCelebration(){
+  const s=S.streak;
+  if(s===7) celebrate('🔥','7 dias seguidos!','Uma semana sem parar. Continue firme!');
+  else if(s===30) celebrate('⚡','30 dias seguidos!','Um mês de consistência. Você é incrível!');
+  else if(s===100) celebrate('💎','100 dias seguidos!','Lendário! Nada te para!');
+}
+
+// ════════════════════════════════════
+// PLANO RENDER
+// ════════════════════════════════════
+let activeMonth=null;
+function renderPlano(resetMonth=true){
+  const today=todayDay();
+  if(resetMonth) activeMonth=dayMonth(today);
+
+  // Tabs
+  const tabs=document.getElementById('mtabs');
+  tabs.innerHTML='';
+  MONTHS.forEach((m,i)=>{
+    const b=document.createElement('button');
+    b.className='mtab'+(i===activeMonth?' on':'');
+    b.textContent=m;
+    b.onclick=()=>{activeMonth=i;renderPlano(false);};
+    tabs.appendChild(b);
+  });
+
+  const ms=MSTART[activeMonth],me=MEND[activeMonth];
+  const total=S.completed.size;
+  document.getElementById('planosub').textContent=
+    `${total} de 365 dias lidos (${Math.round(total/365*100)}%)`;
+
+  const list=document.getElementById('plist');
+  list.innerHTML='';
+  for(let d=ms;d<=me;d++){
+    const div=document.createElement('div');
+    div.className='pitem';
+    const done=S.completed.has(d);
+    const isToday=d===today;
+    const missed=d<today&&!done;
+    let cls=done?'done':isToday?'today':missed?'miss':'fut';
+
+    div.innerHTML=`
+      <div class="pdnum ${cls}">${d}</div>
+      <div class="pinfo">
+        <div class="prtext ${done?'done':''}">${READINGS[d-1]}</div>
+        <div class="pdate">${dayDate(d)} · ${sectionOf(d)}</div>
+      </div>
+      <div class="pchk ${done?'on':''}">
+        ${done?'<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,2" fill="none" stroke="#080603" stroke-width="2" stroke-linecap="round"/></svg>':''}
+      </div>`;
+    div.onclick=()=>toggleDay(d);
+    list.appendChild(div);
+  }
+
+  // scroll to today if same month
+  if(activeMonth===dayMonth(today)){
+    setTimeout(()=>{
+      const t=list.querySelector('.pdnum.today');
+      if(t) t.scrollIntoView({behavior:'smooth',block:'center'});
+    },100);
+  }
+}
+
+// ════════════════════════════════════
+// PROGRESSO RENDER
+// ════════════════════════════════════
+function renderProg(){
+  calcStreak();
+  const total=S.completed.size;
+  const pct=Math.round(total/365*100);
+  document.getElementById('rpct').textContent=pct+'%';
+
+  const circ=465;
+  const offset=circ-(circ*pct/100);
+  document.getElementById('pring').style.strokeDashoffset=offset;
+
+  document.getElementById('pg-read').textContent=total;
+  document.getElementById('pg-strk').textContent=S.streak;
+  document.getElementById('pg-xp').textContent=S.xp;
+  const unlockedCount=[...BADGES].filter(b=>{
+    const check=b.check(S.completed,S.bestStreak);
+    return check;
+  }).length;
+  document.getElementById('pg-bdg').textContent=unlockedCount;
+
+  document.getElementById('pphrase').textContent=PHRASES[Math.floor(total/74)%PHRASES.length];
+
+  // Sections
+  const sl=document.getElementById('seclist');sl.innerHTML='';
+  for(const sec of SECTIONS){
+    const total_sec=sec.e-sec.s+1;
+    const done_sec=range(sec.s,sec.e).filter(d=>S.completed.has(d)).length;
+    const pct_sec=Math.round(done_sec/total_sec*100);
+    sl.innerHTML+=`
+      <div class="secitem">
+        <div class="sechdr">
+          <span class="secname">${sec.icon} ${sec.name}</span>
+          <span class="secpct">${pct_sec}%</span>
+        </div>
+        <div class="secbar"><div class="secfill" style="width:${pct_sec}%"></div></div>
+      </div>`;
+  }
+
+  // Heatmap
+  const hg=document.getElementById('hgrid');hg.innerHTML='';
+  const today=todayDay();
+  for(let d=1;d<=365;d++){
+    const el=document.createElement('div');
+    el.className='hcell '+(d===today?'today':S.completed.has(d)?'done':d<today?'miss':'fut');
+    el.title=`Dia ${d}: ${READINGS[d-1]}`;
+    hg.appendChild(el);
+  }
+}
+
+// ════════════════════════════════════
+// CONQUISTAS RENDER
+// ════════════════════════════════════
+function renderConq(){
+  calcStreak();
+  const grid=document.getElementById('agrid');grid.innerHTML='';
+  let unlocked=0;
+  for(const b of BADGES){
+    const on=b.check(S.completed,S.bestStreak);
+    if(on) unlocked++;
+    grid.innerHTML+=`
+      <div class="bcard ${on?'on':'off'}">
+        <span class="bicon">${b.icon}</span>
+        <div class="bname">${b.name}</div>
+        <div class="bdesc">${b.desc}</div>
+        ${on?'<div class="bunlk">✦ Desbloqueado</div>':''}
+      </div>`;
+  }
+  document.getElementById('bdgsub').textContent=`${unlocked} / ${BADGES.length} desbloqueadas`;
+}
+
+// ════════════════════════════════════
+// BADGES CHECK
+// ════════════════════════════════════
+function checkBadges(){
+  calcStreak();
+  for(const b of BADGES){
+    if(!S.unlockedBadges.has(b.id)&&b.check(S.completed,S.bestStreak)){
+      S.unlockedBadges.add(b.id);
+      save();
+      setTimeout(()=>celebrate(b.icon,'Conquista desbloqueada!',`"${b.name}" — ${b.desc}`),800);
+      break;
+    }
+  }
+}
+
+// ════════════════════════════════════
+// CONFIG RENDER
+// ════════════════════════════════════
+function renderCfg(){
+  document.getElementById('cfgname').value=S.name;
+  document.getElementById('cfgread').textContent=S.completed.size;
+  document.getElementById('remtime').value=S.remTime;
+  const tog=document.getElementById('remtog');
+  tog.className='tog'+(S.remOn?' on':'');
+  document.getElementById('remsub').textContent=S.remOn?`Ativo às ${S.remTime}`:'Desativado';
+  document.getElementById('remtimebox').style.display=S.remOn?'flex':'none';
+}
+
+function saveName(v){S.name=v.trim();save();renderHome();}
+
+function toggleReminder(){
+  S.remOn=!S.remOn;save();renderCfg();
+  if(S.remOn&&'Notification' in window) Notification.requestPermission();
+}
+
+function saveReminderTime(v){S.remTime=v;save();renderCfg();}
+
+function exportProgress(){
+  const lines=['Bíblia 365 — Progresso de Leitura','Zion Church 2026','',
+    `Dias lidos: ${S.completed.size}/365`,
+    `Sequência atual: ${S.streak} dias`,
+    `Melhor sequência: ${S.bestStreak} dias`,
+    `XP: ${S.xp}`,`Nível: ${getLevel().name}`,'',
+    '=== Dias Concluídos ==='
+  ];
+  const sorted=[...S.completed].sort((a,b)=>a-b);
+  sorted.forEach(d=>lines.push(`Dia ${d} (${dayDate(d)}): ${READINGS[d-1]}`));
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='biblia365-progresso.txt';
+  a.click();
+  toast('Progresso exportado!');
+}
+
+function confirmReset(){
+  if(confirm('Tem certeza? Todo o seu progresso será apagado. Esta ação não pode ser desfeita.')){
+    S={completed:new Set(),bestStreak:0,xp:0,name:S.name,remOn:S.remOn,remTime:S.remTime,unlockedBadges:new Set()};
+    save();renderHome();nav('home');toast('Progresso zerado');
+  }
+}
+
+// ════════════════════════════════════
+// TOAST
+// ════════════════════════════════════
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// ════════════════════════════════════
+// CELEBRATE
+// ════════════════════════════════════
+let celQueue=[];let celShowing=false;
+function celebrate(icon,title,msg){
+  celQueue.push({icon,title,msg});
+  if(!celShowing) showNextCel();
+}
+function showNextCel(){
+  if(!celQueue.length){celShowing=false;return;}
+  celShowing=true;
+  const {icon,title,msg}=celQueue.shift();
+  document.getElementById('celicon').textContent=icon;
+  document.getElementById('celtitle').textContent=title;
+  document.getElementById('celmsg').textContent=msg;
+  document.getElementById('cel').classList.add('show');
+  launchParticles();
+}
+function closeCel(){
+  document.getElementById('cel').classList.remove('show');
+  setTimeout(showNextCel,400);
+}
+
+// ════════════════════════════════════
+// PARTICLES
+// ════════════════════════════════════
+function launchParticles(){
+  const canvas=document.getElementById('ptcl');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const pts=Array.from({length:60},()=>({
+    x:Math.random()*canvas.width,y:canvas.height+10,
+    vx:(Math.random()-.5)*4,vy:-(Math.random()*8+4),
+    r:Math.random()*5+2,
+    c:['#C8A020','#E8C84A','#FFD700','#FFF3A0','#FFFFFF'][Math.floor(Math.random()*5)],
+    alpha:1,rot:Math.random()*360,rotV:(Math.random()-.5)*8
+  }));
+  let af;function anim(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    for(const p of pts){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.2;p.alpha-=0.012;p.rot+=p.rotV;
+      if(p.alpha>0){alive=true;ctx.save();ctx.globalAlpha=p.alpha;ctx.fillStyle=p.c;
+        ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+        ctx.fillRect(-p.r,-p.r,p.r*2,p.r*2);ctx.restore();}
+    }
+    if(alive) af=requestAnimationFrame(anim);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  cancelAnimationFrame(af);anim();
+}
+
+// ════════════════════════════════════
+// PWA MANIFEST
+// ════════════════════════════════════
+function injectManifest(){
+  const m={
+    name:"Bíblia 365 · Zion",short_name:"Bíblia 365",
+    start_url:".",display:"standalone",
+    background_color:"#080603",theme_color:"#080603",
+    icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%23080603'/><text x='256' y='340' font-size='300' text-anchor='middle'>📖</text></svg>",sizes:"any",type:"image/svg+xml"}]
+  };
+  const blob=new Blob([JSON.stringify(m)],{type:'application/json'});
+  const link=document.createElement('link');
+  link.rel='manifest';link.href=URL.createObjectURL(blob);
+  document.head.appendChild(link);
+}
+
+// ════════════════════════════════════
+// INIT
+// ════════════════════════════════════
+load();
+injectManifest();
+renderHome();
+
+// Build month tabs on init
+renderPlano();
+
+// Auto-scroll month tabs to current month
+setTimeout(()=>{
+  const tabs=document.getElementById('mtabs');
+  const active=tabs.querySelector('.mtab.on');
+  if(active) active.scrollIntoView({behavior:'smooth',inline:'center'});
+},200);
+</script>
+</body>
+</html>
