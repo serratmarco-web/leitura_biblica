@@ -820,7 +820,7 @@ function renderHome(){
   // stats
   const total=S.completed.size;
   const rem=365-total;
-  const shouldHaveDone=today;
+  const shouldHaveDone=today-1;
   const adv=total-shouldHaveDone;
   document.getElementById('s-read').textContent=total;
   document.getElementById('s-rem').textContent=rem;
