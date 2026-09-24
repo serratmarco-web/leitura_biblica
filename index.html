@@ -30,6 +30,7 @@
   --fb:'Inter',system-ui,-apple-system,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
 html,body{height:100%;background:var(--bg);color:var(--cream);font-family:var(--fb);overflow:hidden}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -107,6 +108,37 @@ button{cursor:pointer}
 .catch .next .n{font-family:var(--ff);font-size:20px;color:var(--amber);font-weight:700;min-width:44px;text-align:center}
 .catch .next .t{flex:1;font-size:14px;font-weight:600}
 .catch .next .t small{display:block;font-size:12px;color:var(--dim);font-weight:400}
+.catch-sentence{font-size:15px!important;color:var(--cream)!important;line-height:1.55!important;margin-bottom:16px!important}
+.catch-sentence b{color:var(--amber)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{flex:1;min-width:0;white-space:nowrap;border:1px solid var(--border2);background:var(--bg2);border-radius:99px;padding:9px 6px;font-size:13px;font-weight:600;color:var(--dim);min-height:40px}
+.todo-more{background:none;border:1px dashed var(--border2)!important;justify-content:center;color:var(--dim);font-size:13px!important;font-weight:600;min-height:44px!important}
+.chips button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#080603}
+.todo{display:grid;gap:8px}
+.todo button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;min-height:52px}
+.todo .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--amber);flex-shrink:0;display:grid;place-items:center;font-size:14px;font-weight:700;color:#080603}
+.todo .txt{flex:1;min-width:0;font-size:14.5px;font-weight:600}
+.todo .txt small{display:block;font-size:12px;color:var(--dim);font-weight:400;margin-top:1px}
+.todo button.on{opacity:.6}
+.todo button.on .box{background:var(--amber)}
+.todo button.on .txt{text-decoration:line-through;text-decoration-color:var(--dim)}
+.todo-done{margin-top:10px;font-size:13.5px;color:var(--greenl);font-weight:600}
+.fc{background:var(--bg2);border-radius:12px;padding:4px 14px;margin-bottom:12px}
+.fc-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.fc-row:last-child{border-bottom:none}
+.fc-row span{color:var(--dim)}
+.fc-row b{text-align:right;font-weight:600}
+.fc-row b.hl{color:var(--amber)}
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center;position:relative}
+.sc .k{font-family:var(--ff);font-size:19px;font-weight:700;color:var(--cream)}
+.sc .k small{font-family:var(--fb);font-size:11px;font-weight:500;color:var(--dim)}
+.sc .r{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.35}
+.sc .r b{color:var(--cream);font-weight:600}
+.sc.best{border-color:var(--amber);background:linear-gradient(160deg,var(--amberdim),var(--bg2))}
+.sc.best .tag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--amber);color:#080603;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.sc.no{opacity:.5}
+.fcnote{font-size:12px;color:var(--dim);line-height:1.45;margin-top:10px}
 .mini{padding:8px 12px;min-height:40px;font-size:13px;border-radius:10px}
 
 .strk{display:flex;align-items:center;gap:14px}
@@ -291,15 +323,15 @@ canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
     </div>
   </section>
 
-  <section class="card catch" id="catch" hidden aria-label="Leituras pendentes">
-    <h3 id="catch-t">Você tem leituras pendentes</h3>
-    <p id="catch-p"></p>
-    <div class="next">
-      <div class="n" id="catch-n">—</div>
-      <div class="t" id="catch-r">—</div>
-      <button class="btn btn-gold mini" id="catch-btn">Lido ✓</button>
-    </div>
-    <button class="btn-link" id="catch-mode" hidden style="margin-top:6px">Seguir no meu ritmo (começar do Dia 1 hoje) →</button>
+  <section class="card catch" id="catch" hidden aria-labelledby="catch-t">
+    <h3 id="catch-t">Você está atrás no plano</h3>
+    <p class="catch-sentence" id="catch-p"></p>
+    <div class="label" style="margin-bottom:8px">Alcançar em</div>
+    <div class="chips" id="catch-chips" role="group" aria-label="Prazo para alcançar"></div>
+    <div class="label" style="margin:16px 0 8px" id="catch-lt">Leia também hoje</div>
+    <div class="todo" id="catch-list"></div>
+    <div class="todo-done" id="catch-done" hidden>✓ Meta de hoje cumprida! Amanhã tem mais.</div>
+    <button class="btn-link" id="catch-mode" hidden style="margin-top:8px">Prefere recomeçar no seu ritmo? Dia 1 hoje, sem perder nada →</button>
   </section>
 
   <section class="card strk" aria-label="Sequência">
@@ -348,6 +380,11 @@ canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
     <div class="pstat"><div class="ic">🔥</div><div class="vv" id="pg-strk">0</div><div class="ll">recorde de sequência</div></div>
     <div class="pstat"><div class="ic">🏆</div><div class="vv" id="pg-bdg">0</div><div class="ll">conquistas</div></div>
   </div>
+  <section class="card" aria-labelledby="prev-t">
+    <div class="label" id="prev-t" style="margin-bottom:10px">Previsão</div>
+    <div class="fc" id="prev-fc" style="margin-bottom:0"></div>
+    <div class="fcnote" id="prev-note"></div>
+  </section>
   <section class="card">
     <div class="label" style="margin-bottom:14px">Seções da Bíblia</div>
     <div id="seclist"></div>
@@ -585,6 +622,83 @@ function stats() {
 }
 const levelOf = xp => LEVELS.find(l => xp >= l.min && xp < l.max) || LEVELS[LEVELS.length - 1];
 
+// ═══════════════════════ PREVISÃO ═══════════════════════
+const fmtDM = dt => `${dt.getDate()} ${MON[dt.getMonth()]}`;
+function forecast(st = stats()) {
+  const d = st.today, over = planOver();
+  const end = planDate(365);
+  const daysLeft = over ? 0 : 365 - d + 1;                 // inclui hoje
+  const unread = range(1, 365).filter(x => !st.set.has(x));
+  const remaining = unread.length;
+  const dueNow = st.pending.length;                         // atrasadas (antes de hoje)
+  const pendingCh = st.pending.reduce((a, x) => a + chaptersOf(x), 0);
+  const remainingCh = unread.reduce((a, x) => a + chaptersOf(x), 0);
+  const perDayToFinish = daysLeft ? Math.ceil(remaining / daysLeft) : remaining;
+  const chPerDayToFinish = daysLeft ? Math.ceil(remainingCh / daysLeft) : remainingCh;
+  // Cenários por prazo: quantos capítulos por dia zeram as pendentes em T dias
+  // (capítulos pendentes ÷ T) + capítulos das leituras do próprio dia nesse período
+  const maxT = Math.max(1, daysLeft - 1);
+  const targets = (pendingCh <= 30 ? [3, 7, 14] : [14, 30, maxT])
+    .map(t => Math.min(t, maxT)).filter((t, i, a) => a.indexOf(t) === i);
+  const scen = targets.map(T => {
+    const extraCh = pendingCh / T;
+    const dailyDays = range(d, Math.min(365, d + T - 1));
+    const dailyCh = dailyDays.reduce((a, x) => a + chaptersOf(x), 0) / dailyDays.length;
+    return { T, extraCh: Math.ceil(extraCh), dailyCh: Math.round(dailyCh), totalCh: Math.ceil(extraCh + dailyCh),
+             date: new Date(Date.now() + (T - 1) * DAY), untilEnd: T === maxT && T > 30 };
+  });
+  // Sugerido: o prazo mais curto com até 8 capítulos extras por dia (senão, o mais longo)
+  const best = dueNow ? (scen.find(x => x.extraCh <= 8) || scen[scen.length - 1]) : null;
+  // Ritmo real: leituras marcadas nos últimos 14 dias
+  const cutoff = iso(new Date(Date.now() - 13 * DAY));
+  // Limita a 5 por dia: marcar pendentes em lote não distorce a previsão
+  const perDate = {};
+  Object.values(S.done).filter(x => x >= cutoff).forEach(x => { perDate[x] = (perDate[x] || 0) + 1; });
+  const recent = Object.values(perDate).reduce((a, c) => a + Math.min(c, 5), 0);
+  const pace = recent / 14;                                  // leituras/dia
+  const finishDays = pace > 0 ? Math.ceil(remaining / pace) : null;
+  const finishDate = finishDays != null ? new Date(Date.now() + (finishDays - 1) * DAY) : null;
+  return { d, end, daysLeft, remaining, dueNow, pendingCh, remainingCh, perDayToFinish, chPerDayToFinish, scen, best, recent, pace, finishDays, finishDate, over };
+}
+
+// ═══════════════════════ PLANO PARA ALCANÇAR ═══════════════════════
+const MIN_PER_CH = 4; // estimativa média de leitura por capítulo
+function fmtMin(ch) {
+  const m = Math.round(ch * MIN_PER_CH / 5) * 5 || 5;
+  return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ' ' + pad(m % 60) : ''}`;
+}
+function catchOptions(pendingCh, maxT) {
+  const base = pendingCh <= 30
+    ? [['3d', '3 dias', 3], ['1s', '1 semana', 7], ['2s', '2 semanas', 14]]
+    : [['2s', '2 semanas', 14], ['1m', '1 mês', 30], ['fim', 'até o fim', maxT]];
+  const out = [];
+  base.forEach(([k, l, t]) => { t = Math.min(t, maxT); if (!out.find(o => o.T === t)) out.push({ key: k, label: t === maxT && k !== 'fim' ? 'até o fim' : l, T: t }); });
+  return out;
+}
+function catchPlan(st = stats()) {
+  const d = st.today, t = todayISO();
+  const maxT = Math.max(1, 365 - d);
+  // pendentes que já foram lidas HOJE contam na meta de hoje (lista estável durante o dia)
+  const doneTodayCatch = Object.keys(S.done).map(Number).filter(x => x < d && S.done[x] === t).sort((a, b) => a - b);
+  const baseCh = [...st.pending, ...doneTodayCatch].reduce((a, x) => a + chaptersOf(x), 0);
+  const opts = catchOptions(baseCh, maxT);
+  // prazo escolhido é guardado como data, para o plano seguir coerente nos próximos dias
+  let T = S.catchUntil ? daysBetween(t, S.catchUntil) + 1 : 0;
+  if (!(T >= 1 && T <= maxT)) {
+    const sug = opts.find(o => Math.ceil(baseCh / o.T) <= 8) || opts[opts.length - 1];
+    T = sug.T; S.catchKey = sug.key; S.catchUntil = iso(new Date(Date.now() + (T - 1) * DAY)); save();
+  }
+  const extraCh = Math.ceil(baseCh / T);
+  // lista de hoje: pendentes na ordem até cobrir a cota de capítulos
+  const list = []; let acc = 0;
+  for (const x of [...doneTodayCatch, ...st.pending].sort((a, b) => a - b)) {
+    if (acc >= extraCh) break;
+    list.push(x); acc += chaptersOf(x);
+  }
+  const todayCh = chaptersOf(d);
+  return { T, until: parseISO(S.catchUntil), opts, key: S.catchKey, extraCh, listCh: acc, todayCh, totalCh: acc + todayCh, list };
+}
+
 // ═══════════════════════ AÇÕES ═══════════════════════
 function setDone(d, on) {
   if (on) S.done[d] = todayISO(); else delete S.done[d];
@@ -632,6 +746,7 @@ app.addEventListener('touchend', e => {
 }, {passive: true});
 
 // ═══════════════════════ HOME ═══════════════════════
+let showAllCatch = false;
 const $ = id => document.getElementById(id);
 function renderHome() {
   const st = stats(), d = st.today;
@@ -677,24 +792,30 @@ function renderHome() {
   btn.textContent = dn ? '✓ Lido! Toque para desfazer' : 'Marcar como lido ✓';
   btn.className = 'btn w100 ' + (dn ? 'btn-done' : 'btn-gold') + (btn.classList.contains('pulse') ? ' pulse' : '');
 
-  // Pendências
+  // Pendências → frase + prazo + lista do que ler hoje
   const cc = $('catch');
-  if (n > 0 && !beforeStart()) {
+  if (n > 0 && !beforeStart() && !planOver()) {
     cc.hidden = false;
-    const next = st.pending[0];
-    $('catch-t').textContent = n === 1 ? 'Uma leitura pendente' : `${n} leituras pendentes`;
-    const left = Math.max(1, 365 - d);
-    const perDay = Math.ceil(n / left);
-    $('catch-p').textContent = n <= 3
-      ? 'Tudo bem — dá para colocar em dia rapidinho.'
-      : n <= 14
-        ? `Lendo uma leitura extra por dia, você fica em dia em ${n} dias. Sem culpa: continue de onde parou.`
-        : `Para terminar no prazo seriam ~${perDay + 1} leituras por dia. Se preferir, siga no seu ritmo — nada do que você já leu se perde.`;
-    $('catch-mode').hidden = !(n > 14 && S.mode === 'igreja');
-    $('catch-n').textContent = next;
-    $('catch-r').innerHTML = `${READINGS[next - 1]}<small>${fmtShort(planDate(next))} · ${sectionOf(next)}</small>`;
-    $('catch-btn').onclick = e => toggleDay(next, e.currentTarget);
-  } else cc.hidden = true;
+    const cp = catchPlan(st);
+    $('catch-t').textContent = n === 1 ? 'Você está 1 leitura atrás' : `Você está ${n} leituras atrás`;
+    $('catch-p').innerHTML = `Para alcançar até <b>${fmtDM(cp.until)}</b>, leia cerca de <b>${cp.totalCh} capítulos por dia</b> (≈ ${fmtMin(cp.totalCh)}), já contando a leitura de hoje.`;
+    $('catch-chips').innerHTML = cp.opts.map(o => `<button data-t="${o.T}" data-k="${o.key}" aria-pressed="${o.key === cp.key}">${o.label}</button>`).join('');
+    $('catch-chips').querySelectorAll('button').forEach(b => b.onclick = () => {
+      showAllCatch = false; S.catchKey = b.dataset.k; S.catchUntil = iso(new Date(Date.now() + (+b.dataset.t - 1) * DAY)); save(); renderHome();
+    });
+    $('catch-lt').textContent = `Leia também hoje · ${cp.listCh} capítulo${cp.listCh > 1 ? 's' : ''}`;
+    // Mostra até 4 itens (prioriza os ainda não lidos); o resto fica atrás de "ver todas"
+    const pendingFirst = [...cp.list.filter(x => !isDone(x)), ...cp.list.filter(isDone)];
+    const visible = showAllCatch ? cp.list : cp.list.filter(x => pendingFirst.slice(0, 4).includes(x));
+    $('catch-list').innerHTML = visible.map(x => `<button data-d="${x}" class="${isDone(x) ? 'on' : ''}" aria-pressed="${isDone(x)}">
+        <span class="box">${isDone(x) ? '✓' : ''}</span>
+        <span class="txt">${READINGS[x - 1]}<small>Dia ${x} · ${fmtShort(planDate(x))} · ${chaptersOf(x)} cap.</small></span></button>`).join('')
+      + (cp.list.length > visible.length ? `<button class="todo-more" id="catch-more">Ver todas as ${cp.list.length} leituras de hoje</button>` : '');
+    $('catch-list').querySelectorAll('button[data-d]').forEach(b => b.onclick = e => toggleDay(+b.dataset.d, e.currentTarget));
+    const more = $('catch-more'); if (more) more.onclick = () => { showAllCatch = true; renderHome(); };
+    $('catch-done').hidden = !cp.list.every(isDone);
+    $('catch-mode').hidden = !(n > 30 && S.mode === 'igreja');
+  } else { cc.hidden = true; if (S.catchUntil) { delete S.catchUntil; delete S.catchKey; save(); } }
 
   // Sequência
   $('snum').textContent = st.cur;
@@ -797,6 +918,22 @@ function renderProg() {
   $('pg-strk').textContent = st.best;
   $('pg-bdg').textContent = BADGES.filter(b => { const [a, t] = b.prog(st); return a >= t; }).length;
   $('pphrase').textContent = PHRASES[Math.floor(st.total / 74) % PHRASES.length];
+  const f = forecast(st);
+  const paceWeek = Math.round(f.pace * 7 * 10) / 10;
+  const rows = [
+    `<div class="fc-row"><span>Seu ritmo (últimos 14 dias)</span><b>${paceWeek.toLocaleString('pt-BR')} leituras/semana</b></div>`,
+    `<div class="fc-row"><span>Nesse ritmo, você termina</span><b class="${f.finishDate && f.finishDate > f.end ? 'hl' : ''}">${f.remaining === 0 ? 'Concluído! 🏆' : f.finishDate ? fmtShort(f.finishDate) + ' de ' + f.finishDate.getFullYear() : 'sem leituras recentes'}</b></div>`,
+    `<div class="fc-row"><span>Para terminar até ${fmtDM(f.end)}</span><b>${f.remaining === 0 ? '—' : `${f.perDayToFinish} leitura${f.perDayToFinish > 1 ? 's' : ''}/dia · ~${f.chPerDayToFinish} cap.`}</b></div>`
+  ];
+  if (f.dueNow > 0) {
+    rows.push(`<div class="fc-row"><span>Pendentes</span><b class="hl">${f.dueNow} leituras · ${f.pendingCh} capítulos</b></div>`);
+    const myT = catchPlan(st).T;
+    f.scen.forEach(x => rows.push(`<div class="fc-row"><span>Em dia ${x.untilEnd ? 'até o fim' : `em ${x.T} dias`}${x.T === myT ? ' ★' : ''}</span><b${x.T === myT ? ' class="hl"' : ''}>${x.totalCh} cap./dia <small style="color:var(--dim);font-weight:400">(${x.extraCh} + ${x.dailyCh})</small></b></div>`));
+  }
+  $('prev-fc').innerHTML = rows.join('');
+  $('prev-note').textContent = f.remaining === 0 ? '' :
+    f.dueNow === 0 ? 'Você está em dia. Mantendo uma leitura por dia, termina exatamente no prazo.' :
+    `Cap./dia = capítulos pendentes divididos pelo prazo + capítulos da leitura de cada dia. ★ = o prazo escolhido no Início. Faltam ${f.remaining} leituras (${f.remainingCh} capítulos) no plano todo.`;
   $('seclist').innerHTML = SECTIONS.map(s => {
     const tot = s.e - s.s + 1, dn = inRange(st.set, s.s, s.e), p = Math.round(dn / tot * 100);
     return `<div class="secitem"><div class="sechdr"><span>${s.icon} ${s.name}</span><span class="secpct">${dn}/${tot}</span></div>
@@ -902,7 +1039,10 @@ $('importfile').addEventListener('change', async e => {
 });
 $('btnshare').addEventListener('click', async () => {
   const st = stats();
-  const txt = `📖 Bíblia 365 · Zion Church\n${S.name ? S.name + ': ' : ''}${st.total}/365 leituras (${Math.round(st.total / 365 * 100)}%)\n🔥 Sequência: ${st.cur} dias (recorde ${st.best})\n📚 ${st.chapters} capítulos lidos · nível ${levelOf(st.xp).name}`;
+  const f = forecast(st);
+  let txt = `📖 Bíblia 365 · Zion Church\n${S.name ? S.name + ': ' : ''}${st.total}/365 leituras (${Math.round(st.total / 365 * 100)}%)\n🔥 Sequência: ${st.cur} dias (recorde ${st.best})\n📚 ${st.chapters} capítulos lidos · nível ${levelOf(st.xp).name}`;
+  if (f.dueNow > 0) { const cp = catchPlan(st); txt += `\n⏳ ${f.dueNow} leituras atrás — meta: ~${cp.totalCh} capítulos/dia para alcançar até ${fmtDM(cp.until)}`; }
+  else txt += f.remaining ? '\n✅ Em dia com o plano!' : '\n🏆 Plano concluído!';
   try { if (navigator.share) await navigator.share({text: txt}); else { await navigator.clipboard.writeText(txt); toast('Resumo copiado'); } } catch (e) {}
 });
 $('btnreset').addEventListener('click', () => {
