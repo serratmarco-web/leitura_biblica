@@ -5,684 +5,482 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Bíblia 365 · Zion</title>
 <meta name="theme-color" content="#080603">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bíblia 365">
 <meta name="description" content="Plano de leitura bíblica em 1 ano — Zion Church">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23080603'/%3E%3Cpath d='M12 18c7-3 14-3 20 1v29c-6-4-13-4-20-1z' fill='%23C8A020'/%3E%3Cpath d='M52 18c-7-3-14-3-20 1v29c6-4 13-4 20-1z' fill='%23E8C84A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#080603;--bg1:#111009;--bg2:#1A180F;--bg3:#221F14;
-  --gold:#C8A020;--gold2:#E8C84A;--golddim:#6A5510;--goldfaint:rgba(200,160,32,.10);
-  --cream:#EEE4C6;--dim:#8A7D5A;--dim2:#554E38;
-  --teal:#1E6A78;--red:#A03030;--green:#2E6E44;
-  --border:rgba(200,160,32,.12);--border2:rgba(200,160,32,.28);
-  --r:16px;--nav:68px;
+  --bg:#080603;--bg1:#12100A;--bg2:#1C1910;--bg3:#262216;
+  --gold:#C8A020;--gold2:#E8C84A;--golddim:#7A6214;--goldfaint:rgba(200,160,32,.10);
+  --cream:#EEE4C6;--dim:#A3977A;--dim2:#7A7058;
+  --teal:#3FB6C9;--tealdim:rgba(63,182,201,.14);
+  --amber:#E0A33A;--amberdim:rgba(224,163,58,.14);
+  --green:#2E7A4A;--greenl:#7FD6A0;
+  --red:#C24A4A;
+  --border:rgba(200,160,32,.14);--border2:rgba(200,160,32,.32);
+  --r:16px;--nav:64px;
   --ff:'Playfair Display',Georgia,serif;
-  --fb:'Inter',system-ui,sans-serif;
+  --fb:'Inter',system-ui,-apple-system,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--cream);font-family:var(--fb);overflow:hidden}
-#app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative}
-.screen{
-  display:none;flex:1;overflow-y:auto;padding-bottom:var(--nav);scrollbar-width:none;
-}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:2px;border-radius:8px}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:460px;margin:0 auto;position:relative}
+.screen{display:none;flex:1;overflow-y:auto;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom) + 16px);scrollbar-width:none}
 .screen::-webkit-scrollbar{display:none}
-.screen.active{
-  display:block;
-  animation:screenIn .3s cubic-bezier(.25,.46,.45,.94) both;
-}
-@keyframes screenIn{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:translateY(0)}
-}
+.screen.active{display:block;animation:screenIn .28s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes screenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* ── NAV ── */
-#bnav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:430px;height:var(--nav);
-  background:rgba(8,6,3,.96);backdrop-filter:blur(24px);
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-around;
-  z-index:100;padding-bottom:env(safe-area-inset-bottom)
-}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:8px 0;background:none;border:none;cursor:pointer;
-  color:var(--dim);font-family:var(--fb);font-size:10px;font-weight:500;
-  text-transform:uppercase;letter-spacing:.06em;transition:color .2s,transform .1s}
-.nb:active{transform:scale(.88)}
-.nb.on{color:var(--gold)}
-.nb.on svg{filter:drop-shadow(0 0 6px rgba(200,160,32,.5))}
-.nb svg{width:21px;height:21px;transition:transform .2s}
+#bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;
+  height:calc(var(--nav) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(8,6,3,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);display:flex;z-index:100}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:none;border:none;color:var(--dim);font-size:11px;font-weight:500;transition:color .2s}
+.nb svg{width:22px;height:22px}
+.nb[aria-current="page"]{color:var(--gold2)}
+.nb[aria-current="page"] svg{filter:drop-shadow(0 0 6px rgba(200,160,32,.5))}
+
+/* ── HEADERS ── */
+.hdr{padding:calc(env(safe-area-inset-top) + 40px) 22px 18px;
+  background:linear-gradient(180deg,rgba(200,160,32,.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+.grt{font-size:12px;color:var(--dim);letter-spacing:.06em;margin-bottom:4px}
+.htitle{font-family:var(--ff);font-size:27px;font-weight:600;line-height:1.2}
+.hmeta{font-size:12.5px;color:var(--dim);margin-top:6px}
+.shdr{padding:calc(env(safe-area-inset-top) + 40px) 22px 12px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:rgba(8,6,3,.97);backdrop-filter:blur(12px);z-index:10}
+.stitle{font-family:var(--ff);font-size:26px;font-weight:700}
+.ssub{font-size:12.5px;color:var(--dim);margin-top:3px}
+
+/* ── COMMON ── */
+.card{margin:0 18px 14px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;
+  padding:13px 16px;font-size:14px;font-weight:700;min-height:48px;transition:transform .12s,background .3s}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:linear-gradient(135deg,var(--golddim),var(--gold));color:#080603}
+.btn-done{background:rgba(46,122,74,.22);border:1px solid var(--green);color:var(--greenl)}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--cream)}
+.btn-link{background:none;border:none;color:var(--gold2);font-weight:600;font-size:13px;padding:8px 4px;min-height:40px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-danger{background:transparent;border:1px solid var(--red);color:#E88;width:100%}
+.w100{width:100%}
 
 /* ── HOME ── */
-.hdr{
-  padding:52px 22px 18px;
-  background:linear-gradient(180deg,rgba(200,160,32,.07) 0%,transparent 100%);
-  border-bottom:1px solid var(--border);position:relative;overflow:hidden
-}
-.hdr::after{
-  content:'';position:absolute;top:-40px;right:-40px;
-  width:160px;height:160px;border-radius:50%;
-  background:radial-gradient(circle,rgba(200,160,32,.06),transparent 70%);
-  pointer-events:none
-}
-.grt{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
-.htitle{font-family:var(--ff);font-size:26px;font-weight:600;color:var(--cream);line-height:1.2}
+.statsrow{display:flex;gap:10px;padding:14px 18px}
+.spill{flex:1;background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center}
+.spill .v{font-family:var(--ff);font-size:23px;font-weight:700;color:var(--gold);line-height:1}
+.spill .l{font-size:11px;color:var(--dim);margin-top:5px}
+.spill.ok .v{color:var(--greenl)}
+.spill.late .v{color:var(--amber)}
 
-.statsrow{display:flex;gap:10px;padding:14px 22px}
-.spill{
-  flex:1;background:var(--bg1);border:1px solid var(--border);
-  border-radius:12px;padding:11px 8px;text-align:center
-}
-.spill .v{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--gold);line-height:1}
-.spill .l{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.xpsec{padding:0 18px 14px}
+.xphdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.xplvl{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.xppts{font-size:12px;color:var(--dim)}
+.bar{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--golddim),var(--gold2));border-radius:3px;transition:width .8s ease}
 
-.xpsec{padding:0 22px 14px}
-.xphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
-.xplvl{font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
-.xppts{font-size:11px;color:var(--dim)}
-.xpbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.xpfill{height:100%;background:linear-gradient(90deg,var(--golddim),var(--gold));border-radius:3px;transition:width .8s ease}
+.tcard{border-color:var(--border2);position:relative;overflow:hidden;padding:22px}
+.tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--golddim),var(--gold2),var(--golddim))}
+.tlbl{font-size:11.5px;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;font-weight:600;text-transform:uppercase}
+.treading{font-family:var(--ff);font-size:30px;font-weight:600;line-height:1.15;margin-bottom:5px}
+.tsub{font-size:13px;color:var(--dim);margin-bottom:16px}
+.tactions{display:flex;flex-direction:column;gap:6px}
+.pulse{animation:btnPulse .45s cubic-bezier(.36,.07,.19,.97)}
+@keyframes btnPulse{0%,100%{transform:scale(1)}30%{transform:scale(1.04)}60%{transform:scale(.98)}}
 
-.tcard{
-  margin:0 22px 14px;background:var(--bg1);
-  border:1px solid var(--border2);border-radius:var(--r);
-  padding:22px;position:relative;overflow:hidden
-}
-.tcard::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--golddim),var(--gold2),var(--golddim))
-}
-.tlbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:7px}
-.treading{font-family:var(--ff);font-size:28px;font-weight:600;color:var(--cream);line-height:1.15;margin-bottom:5px}
-.tsub{font-size:12px;color:var(--dim);margin-bottom:18px}
+.catch{border-color:rgba(224,163,58,.35);background:linear-gradient(160deg,var(--amberdim),var(--bg1) 60%)}
+.catch h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.catch p{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px}
+.catch .next{display:flex;align-items:center;gap:12px;background:var(--bg2);border-radius:12px;padding:10px 12px}
+.catch .next .n{font-family:var(--ff);font-size:20px;color:var(--amber);font-weight:700;min-width:44px;text-align:center}
+.catch .next .t{flex:1;font-size:14px;font-weight:600}
+.catch .next .t small{display:block;font-size:12px;color:var(--dim);font-weight:400}
+.mini{padding:8px 12px;min-height:40px;font-size:13px;border-radius:10px}
 
-.btnok{
-  width:100%;padding:13px;
-  background:linear-gradient(135deg,var(--golddim),var(--gold));
-  border:none;border-radius:10px;
-  font-family:var(--fb);font-size:13px;font-weight:700;
-  color:#080603;cursor:pointer;letter-spacing:.03em;
-  transition:background .35s,transform .15s
-}
-.btnok:active{transform:scale(.97)}
-.btnok.done{background:var(--green);color:#fff;cursor:pointer}
-.btnok.pulse{animation:btnPulse .45s cubic-bezier(.36,.07,.19,.97)}
-@keyframes btnPulse{
-  0%,100%{transform:scale(1)}
-  30%{transform:scale(1.05)}
-  60%{transform:scale(.98)}
-}
-
-.strkbox{
-  margin:0 22px 14px;background:var(--bg1);border:1px solid var(--border);
-  border-radius:var(--r);padding:15px 18px;display:flex;align-items:center;gap:14px
-}
+.strk{display:flex;align-items:center;gap:14px}
 .sflame{font-size:32px;line-height:1}
-.sinfo{flex:1}
 .snum{font-family:var(--ff);font-size:30px;font-weight:700;color:var(--gold);line-height:1}
-.slbl{font-size:11px;color:var(--dim);margin-top:2px}
-.sbest{text-align:right;font-size:10px;color:var(--dim)}
-.sbest span{display:block;font-size:16px;font-weight:700;color:var(--cream)}
+.slbl{font-size:12.5px;color:var(--dim);margin-top:2px}
+.sbest{margin-left:auto;text-align:right;font-size:12px;color:var(--dim)}
+.sbest b{display:block;font-size:17px;color:var(--cream)}
 
-.recdays{padding:0 22px 24px}
-.recdays h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:10px}
-.recdays-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.recdays-count{font-size:11px;color:var(--gold);font-weight:600}
-.drow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;padding-right:8px}
+.rec{padding:4px 0 8px}
+.rechdr{display:flex;justify-content:space-between;align-items:baseline;padding:0 18px;margin-bottom:10px}
+.recount{font-size:12px;color:var(--gold);font-weight:600}
+.drow{display:flex;gap:8px;overflow-x:auto;padding:0 18px 4px;scrollbar-width:none;scroll-snap-type:x proximity}
 .drow::-webkit-scrollbar{display:none}
-.ddot{
-  flex-shrink:0;width:72px;
-  background:var(--bg1);border:1px solid var(--border);border-radius:14px;
-  padding:10px 8px 10px;
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  cursor:pointer;transition:border-color .2s,transform .12s;
-  position:relative;overflow:hidden;
-}
-.ddot::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:14px 14px 0 0;opacity:0;transition:opacity .2s}
-.ddot:active{transform:scale(.93)}
-.ddot.done{border-color:rgba(200,160,32,.3);background:linear-gradient(160deg,rgba(200,160,32,.07),var(--bg1))}
-.ddot.done::before{background:linear-gradient(90deg,var(--golddim),var(--gold2));opacity:1}
-.ddot.today{border-color:rgba(30,106,120,.6);background:linear-gradient(160deg,rgba(30,106,120,.1),var(--bg1));box-shadow:0 0 14px rgba(30,106,120,.2)}
-.ddot.today::before{background:linear-gradient(90deg,#1E6A78,#5acce0);opacity:1}
-.ddot.miss{border-color:rgba(160,48,48,.3);background:linear-gradient(160deg,rgba(160,48,48,.06),var(--bg1))}
-.ddot.miss::before{background:var(--red);opacity:.6}
-.ddot.fut{background:var(--bg1);border:1px solid var(--border)}
-.ddot-wd{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim2);font-weight:700}
-.ddot-wd.today{color:#5acce0}
-.ddot-wd.done{color:var(--dim)}
-.ddot-num{font-family:var(--ff);font-size:22px;font-weight:700;line-height:1}
-.ddot-num.done{color:var(--gold)}
-.ddot-num.today{color:#5acce0}
-.ddot-num.miss{color:rgba(160,48,48,.65)}
-.ddot-num.fut{color:var(--dim2)}
-.ddot-icon{font-size:13px;line-height:1}
-.ddot-div{width:100%;height:1px;margin:2px 0}
-.ddot-div.done{background:rgba(200,160,32,.15)}
-.ddot-div.today{background:rgba(30,106,120,.3)}
-.ddot-div.miss{background:rgba(160,48,48,.15)}
-.ddot-div.fut{background:var(--border)}
-.ddot-reading{
-  font-size:8px;line-height:1.35;text-align:center;color:var(--dim2);
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
-  word-break:break-word;min-height:30px;
-}
-.ddot-reading.done{color:var(--dim)}
-.ddot-reading.today{color:rgba(90,204,224,.7)}
+.dd{flex-shrink:0;width:78px;background:var(--bg1);border:1px solid var(--border);border-radius:14px;padding:10px 8px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden;scroll-snap-align:end;text-align:center}
+.dd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0}
+.dd .wd{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700}
+.dd .num{font-family:var(--ff);font-size:22px;font-weight:700;line-height:1;color:var(--dim2)}
+.dd .ic{font-size:13px;height:16px}
+.dd .rd{font-size:11px;line-height:1.3;color:var(--dim);min-height:29px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dd.done{border-color:rgba(200,160,32,.35);background:linear-gradient(160deg,rgba(200,160,32,.08),var(--bg1))}
+.dd.done::before{background:linear-gradient(90deg,var(--golddim),var(--gold2));opacity:1}
+.dd.done .num{color:var(--gold)}
+.dd.today{border-color:rgba(63,182,201,.6);background:linear-gradient(160deg,var(--tealdim),var(--bg1));box-shadow:0 0 14px rgba(63,182,201,.15)}
+.dd.today::before{background:var(--teal);opacity:1}
+.dd.today .num,.dd.today .wd{color:var(--teal)}
+.dd.miss{border-color:rgba(224,163,58,.3)}
+.dd.miss::before{background:var(--amber);opacity:.7}
+.dd.miss .num{color:var(--amber)}
 
 /* ── PLANO ── */
-.shdr{
-  padding:52px 22px 0;border-bottom:1px solid var(--border);
-  position:sticky;top:0;background:var(--bg);z-index:10
-}
-.stitle{font-family:var(--ff);font-size:26px;font-weight:700;color:var(--cream)}
-.ssub{font-size:12px;color:var(--dim);margin-top:3px;padding-bottom:12px}
-.plano-header-row{display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 0}
-.btnmarktudo{
-  flex-shrink:0;padding:5px 12px;border-radius:20px;
-  border:1px solid var(--gold);background:transparent;
-  color:var(--gold);font-family:var(--fb);font-size:11px;font-weight:600;
-  cursor:pointer;transition:all .2s;white-space:nowrap
-}
-.btnmarktudo:active{transform:scale(.93)}
-.btnmarktudo.all-done{background:var(--green);border-color:var(--green);color:#fff}
-.mtabs{
-  display:flex;gap:7px;overflow-x:auto;padding:10px 22px;
-  scrollbar-width:none;border-bottom:1px solid var(--border)
-}
+.mtabs{display:flex;gap:7px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none}
 .mtabs::-webkit-scrollbar{display:none}
-.mtab{
-  flex-shrink:0;padding:5px 12px;border-radius:20px;
-  border:1px solid var(--border);background:transparent;
-  color:var(--dim);font-family:var(--fb);font-size:11px;font-weight:500;
-  cursor:pointer;transition:all .2s
-}
-.mtab.on{background:var(--gold);border-color:var(--gold);color:#080603;font-weight:700}
-.plist{padding:0 22px 24px}
-.pitem{
-  display:flex;align-items:center;gap:11px;padding:12px 0;
-  border-bottom:1px solid var(--border);cursor:pointer
-}
+.mtab{flex-shrink:0;padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:12.5px;font-weight:600;min-height:36px}
+.mtab[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#080603}
+.mtab .cnt{font-weight:400;opacity:.75;margin-left:4px}
+.planbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px 4px}
+.planbar .info{font-size:12.5px;color:var(--dim)}
+.plist{padding:0 18px 12px}
+.pitem{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);width:100%;background:none;border-left:none;border-right:none;border-top:none;text-align:left}
 .pitem:last-child{border-bottom:none}
-.pdnum{
-  width:34px;height:34px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;flex-shrink:0
-}
-.pdnum.done{background:var(--gold);color:#080603}
-.pdnum.today{background:var(--bg2);border:2px solid var(--gold);color:var(--gold)}
-.pdnum.miss{background:rgba(160,48,48,.15);color:var(--red)}
-.pdnum.fut{background:var(--bg1);color:var(--dim)}
-.pinfo{flex:1}
-.prtext{font-size:14px;font-weight:500;color:var(--cream)}
-.prtext.done{color:var(--dim)}
-.pdate{font-size:11px;color:var(--dim);margin-top:1px}
-.pchk{
-  width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s
-}
+.pdn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;background:var(--bg1);color:var(--dim)}
+.pdn.done{background:var(--gold);color:#080603}
+.pdn.today{background:var(--bg2);border:2px solid var(--teal);color:var(--teal)}
+.pdn.miss{background:var(--amberdim);color:var(--amber)}
+.pinfo{flex:1;min-width:0}
+.prt{font-size:14.5px;font-weight:500}
+.prt.done{color:var(--dim)}
+.pdate{font-size:12px;color:var(--dim);margin-top:2px}
+.pchk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .pchk.on{background:var(--gold);border-color:var(--gold)}
 
 /* ── PROGRESSO ── */
-.phero{padding:36px 22px 20px;display:flex;flex-direction:column;align-items:center}
+.phero{padding:28px 22px 18px;display:flex;flex-direction:column;align-items:center}
 .ringwrap{position:relative;width:172px;height:172px;margin-bottom:14px}
 .ringwrap svg{transform:rotate(-90deg);width:172px;height:172px}
+#pring{transition:stroke-dashoffset 1s ease}
 .rctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.rpct{font-family:var(--ff);font-size:38px;font-weight:700;color:var(--gold);line-height:1}
-.rptlbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
-.pphrase{font-family:var(--ff);font-style:italic;font-size:14px;color:var(--dim);text-align:center;max-width:230px;line-height:1.5}
-
-.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 22px 20px}
-.pstat{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:15px}
-.pstat .ic{font-size:20px;margin-bottom:7px}
-.pstat .vv{font-family:var(--ff);font-size:26px;font-weight:700;color:var(--cream);line-height:1}
-.pstat .ll{font-size:10px;color:var(--dim);margin-top:3px}
-
-.secsec{padding:0 22px 20px}
-.sectitle{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:11px}
-.secitem{margin-bottom:12px}
-.sechdr{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px}
-.secname{color:var(--cream);font-weight:500}
+.rpct{font-family:var(--ff);font-size:40px;font-weight:700;color:var(--gold);line-height:1}
+.rlbl{font-size:12px;color:var(--dim);margin-top:4px}
+.pphrase{font-family:var(--ff);font-style:italic;font-size:14.5px;color:var(--dim);text-align:center;max-width:260px;line-height:1.5}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 16px}
+.pstat{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.pstat .ic{font-size:19px;margin-bottom:6px}
+.pstat .vv{font-family:var(--ff);font-size:26px;font-weight:700;line-height:1}
+.pstat .ll{font-size:12px;color:var(--dim);margin-top:4px}
+.secitem{margin-bottom:13px}
+.secitem:last-child{margin-bottom:0}
+.sechdr{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px}
 .secpct{color:var(--gold);font-weight:600}
-.secbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.secfill{height:100%;background:linear-gradient(90deg,var(--golddim),var(--gold));border-radius:3px;transition:width .8s ease}
-
-.heatsec{padding:0 22px 24px}
-.heattitle{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:10px}
-.hgrid{display:grid;grid-template-columns:repeat(26,1fr);gap:2px}
-.hcell{aspect-ratio:1;border-radius:2px}
-.hcell.done{background:var(--gold);opacity:.85}
-.hcell.today{background:var(--teal)}
-.hcell.miss{background:var(--red);opacity:.35}
-.hcell.fut{background:var(--bg2)}
+.hgrid{display:grid;grid-template-columns:repeat(21,1fr);gap:3px;margin-top:12px}
+.hc{aspect-ratio:1;border-radius:2px;background:var(--bg2)}
+.hc.done{background:var(--gold)}
+.hc.today{background:var(--teal)}
+.hc.miss{background:var(--amber);opacity:.45}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:12px;color:var(--dim)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
 /* ── CONQUISTAS ── */
-.agrid{padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.bcard{
-  background:var(--bg1);border:1px solid var(--border);
-  border-radius:var(--r);padding:18px 14px;text-align:center;transition:border-color .2s
-}
-.bcard.on{border-color:var(--golddim);background:linear-gradient(135deg,var(--bg1),rgba(200,160,32,.05))}
-.bcard.off{opacity:.38}
-.bicon{font-size:34px;margin-bottom:8px;display:block}
-.bname{font-size:12px;font-weight:600;color:var(--cream);margin-bottom:3px;line-height:1.2}
-.bdesc{font-size:10px;color:var(--dim);line-height:1.4}
-.bunlk{margin-top:7px;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.agrid{padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.bcard{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:16px 12px;text-align:center}
+.bcard.on{border-color:var(--golddim);background:linear-gradient(135deg,var(--bg1),rgba(200,160,32,.07))}
+.bcard.off .bicon{filter:grayscale(1);opacity:.4}
+.bicon{font-size:32px;margin-bottom:8px;display:block}
+.bname{font-size:13px;font-weight:600;margin-bottom:3px;line-height:1.25}
+.bdesc{font-size:12px;color:var(--dim);line-height:1.4}
+.bprog{margin-top:10px}
+.bprog .bar{height:4px}
+.bprog small{display:block;font-size:11px;color:var(--dim);margin-top:5px}
+.bunlk{margin-top:8px;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
 
 /* ── CONFIG ── */
-.csec{padding:0 22px 20px}
-.csec h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin:20px 0 10px}
-.citem{
-  background:var(--bg1);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px 16px;margin-bottom:7px;
-  display:flex;align-items:center;justify-content:space-between
-}
-.cileft{flex:1}
-.cilbl{font-size:14px;color:var(--cream);font-weight:500}
-.cisub{font-size:11px;color:var(--dim);margin-top:2px}
-.cinput{
-  background:transparent;border:none;color:var(--gold);
-  font-family:var(--fb);font-size:13px;font-weight:600;
-  text-align:right;width:110px;outline:none
-}
-input[type=time].cinput{width:90px}
-.tog{
-  width:42px;height:24px;border-radius:12px;
-  background:var(--bg2);border:2px solid var(--border2);
-  cursor:pointer;position:relative;transition:background .2s;flex-shrink:0
-}
-.tog.on{background:var(--gold);border-color:var(--gold)}
-.tog::after{
-  content:'';position:absolute;top:2px;left:2px;
-  width:16px;height:16px;border-radius:50%;
-  background:var(--bg1);transition:transform .2s
-}
-.tog.on::after{transform:translateX(18px);background:#080603}
-.btndanger{
-  width:100%;padding:13px;background:transparent;
-  border:1px solid var(--red);border-radius:10px;
-  color:var(--red);font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer
-}
+.csec{padding:0 18px 12px}
+.csec h3{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin:22px 0 10px;font-weight:600}
+.citem{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}
+button.citem:active{background:var(--bg2)}
+.cil{flex:1;min-width:0}
+.cit{font-size:14.5px;font-weight:500}
+.cis{font-size:12.5px;color:var(--dim);margin-top:2px;line-height:1.45}
+.cinput{background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--gold2);font-size:14px;font-weight:600;padding:9px 10px;text-align:right;width:130px;outline:none}
+.cinput:focus{border-color:var(--gold)}
+.carrow{color:var(--gold);font-size:18px}
+.seg{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;margin-top:10px}
+.seg button{flex:1;border:none;background:none;border-radius:9px;padding:9px 6px;font-size:13px;font-weight:600;color:var(--dim);min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#080603}
+.foot{text-align:center;padding:16px 22px 24px;color:var(--dim2);font-size:12px;line-height:2}
 
 /* ── TOAST ── */
-#toast{
-  position:fixed;bottom:calc(var(--nav) + 14px);left:50%;
-  transform:translateX(-50%) translateY(14px);
-  background:var(--gold);color:#080603;
-  padding:11px 18px;border-radius:12px;font-size:13px;font-weight:700;
-  opacity:0;transition:opacity .25s,transform .25s;z-index:200;white-space:nowrap
-}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast{position:fixed;bottom:calc(var(--nav) + env(safe-area-inset-bottom) + 14px);left:50%;transform:translate(-50%,14px);
+  background:var(--gold);color:#080603;padding:11px 18px;border-radius:12px;font-size:13.5px;font-weight:700;
+  opacity:0;transition:opacity .25s,transform .25s;z-index:200;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 
-/* ── CELEBRATION ── */
-#cel{
-  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-  background:rgba(8,6,3,.85);backdrop-filter:blur(8px);z-index:300;
-  opacity:0;pointer-events:none;transition:opacity .3s
-}
+/* ── SHEETS / MODALS ── */
+.sheetwrap{position:fixed;inset:0;z-index:400;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.sheetwrap.show{opacity:1;pointer-events:auto}
+.sheetwrap .bd{position:absolute;inset:0;background:rgba(8,6,3,.78);backdrop-filter:blur(6px)}
+.sheet{position:relative;width:100%;max-width:460px;background:var(--bg1);border:1px solid var(--border2);border-bottom:none;
+  border-radius:22px 22px 0 0;padding:14px 22px calc(24px + env(safe-area-inset-bottom));transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.25,.46,.45,.94);max-height:92vh;overflow-y:auto}
+.sheetwrap.show .sheet{transform:none}
+.handle{width:38px;height:4px;background:var(--dim2);border-radius:2px;margin:0 auto 18px}
+.dmlbl{font-size:11.5px;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;font-weight:600;text-transform:uppercase}
+.dmreading{font-family:var(--ff);font-size:26px;font-weight:600;line-height:1.25;margin-bottom:4px}
+.dmsect{font-size:13px;color:var(--dim);margin-bottom:6px}
+.dmnote{font-size:12.5px;color:var(--dim);margin-bottom:16px}
+.sheet .btn{width:100%;margin-bottom:10px}
+.ob h2{font-family:var(--ff);font-size:26px;margin-bottom:6px}
+.ob p{font-size:14px;color:var(--dim);line-height:1.55;margin-bottom:16px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.opt[aria-pressed="true"]{border-color:var(--gold);background:linear-gradient(135deg,var(--bg2),rgba(200,160,32,.1))}
+.opt b{display:block;font-size:15px;margin-bottom:3px}
+.opt span{font-size:13px;color:var(--dim);line-height:1.45}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;color:var(--dim);margin-bottom:6px;font-weight:600}
+.field input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:16px;color:var(--cream);outline:none}
+.field input:focus{border-color:var(--gold)}
+
+#cel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,6,3,.85);backdrop-filter:blur(8px);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;padding:24px}
 #cel.show{opacity:1;pointer-events:auto}
-.celbox{
-  background:var(--bg1);border:1px solid var(--border2);border-radius:20px;
-  padding:36px 32px;text-align:center;max-width:280px;
-  transform:scale(.9);transition:transform .3s
-}
-#cel.show .celbox{transform:scale(1)}
+.celbox{background:var(--bg1);border:1px solid var(--border2);border-radius:20px;padding:32px 28px;text-align:center;max-width:300px;transform:scale(.92);transition:transform .3s}
+#cel.show .celbox{transform:none}
 .celicon{font-size:52px;margin-bottom:12px}
 .celtitle{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px}
-.celmsg{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:20px}
-.celclose{
-  padding:11px 28px;background:var(--gold);border:none;border-radius:10px;
-  font-family:var(--fb);font-size:13px;font-weight:700;color:#080603;cursor:pointer
-}
-
-/* ── PARTICLES ── */
-canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:250}
-
-/* ── EMPTY STATE ── */
-.empty{padding:40px 22px;text-align:center}
-.empty .eic{font-size:48px;margin-bottom:12px}
-.empty h3{font-family:var(--ff);font-size:20px;color:var(--cream);margin-bottom:6px}
-.empty p{font-size:13px;color:var(--dim);line-height:1.6}
-
-/* ── MODAL DIA ── */
-#daymodal{
-  position:fixed;inset:0;z-index:400;
-  display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:opacity .25s
-}
-#daymodal.show{opacity:1;pointer-events:auto}
-#daymodal .backdrop{position:absolute;inset:0;background:rgba(8,6,3,.75);backdrop-filter:blur(6px)}
-#daymodal .sheet{
-  position:relative;z-index:1;
-  width:100%;max-width:430px;
-  background:var(--bg1);border:1px solid var(--border2);
-  border-radius:22px 22px 0 0;
-  padding:24px 24px 40px;
-  transform:translateY(100%);
-  transition:transform .32s cubic-bezier(.25,.46,.45,.94)
-}
-#daymodal.show .sheet{transform:translateY(0)}
-.sheethandle{width:36px;height:4px;background:var(--dim2);border-radius:2px;margin:0 auto 20px}
-.dmlbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:6px}
-.dmreading{font-family:var(--ff);font-size:24px;font-weight:600;color:var(--cream);line-height:1.25;margin-bottom:4px}
-.dmsect{font-size:12px;color:var(--dim);margin-bottom:20px}
-.dmbtn{
-  width:100%;padding:14px;border:none;border-radius:11px;
-  font-family:var(--fb);font-size:14px;font-weight:700;cursor:pointer;
-  transition:background .3s,transform .15s;margin-bottom:10px
-}
-.dmbtn:active{transform:scale(.97)}
-.dmbtn.mark{background:linear-gradient(135deg,var(--golddim),var(--gold));color:#080603}
-.dmbtn.unmark{background:rgba(46,110,68,.25);border:1px solid var(--green);color:#6ecf93}
-.dmbtnclose{
-  width:100%;padding:11px;background:transparent;border:1px solid var(--border);
-  border-radius:11px;color:var(--dim);font-family:var(--fb);font-size:13px;cursor:pointer
-}
-
-/* ── XP FLOAT ── */
-.xpfloat{
-  position:fixed;pointer-events:none;z-index:500;
-  font-family:var(--ff);font-size:20px;font-weight:700;color:var(--gold2);
-  text-shadow:0 2px 12px rgba(200,160,32,.5);
-  animation:xpFloat 1.1s ease forwards
-}
-@keyframes xpFloat{
-  0%{opacity:1;transform:translateY(0) scale(1)}
-  60%{opacity:1;transform:translateY(-48px) scale(1.1)}
-  100%{opacity:0;transform:translateY(-80px) scale(.9)}
-}
-
-/* ── NAV INDICATOR DOT ── */
-.nb.on::after{
-  content:'';display:block;width:4px;height:4px;border-radius:50%;
-  background:var(--gold);margin-top:2px;
-  box-shadow:0 0 6px var(--gold)
-}</style>
+.celmsg{font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:20px}
+canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
+.xpfloat{position:fixed;pointer-events:none;z-index:500;font-family:var(--ff);font-size:20px;font-weight:700;color:var(--gold2);text-shadow:0 2px 12px rgba(200,160,32,.5);animation:xpFloat 1.1s ease forwards}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0)}60%{opacity:1;transform:translateY(-44px) scale(1.08)}100%{opacity:0;transform:translateY(-76px) scale(.9)}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
 </head>
 <body>
 <div id="app">
 
-<!-- HOME -->
-<div id="s-home" class="screen active">
+<!-- ═════════ HOME ═════════ -->
+<main id="s-home" class="screen active" aria-labelledby="htitle">
   <div class="hdr">
     <div class="grt" id="grt">Bom dia</div>
-    <div class="htitle" id="htitle">Leitura de Hoje</div>
+    <h1 class="htitle" id="htitle">Leitura de Hoje</h1>
+    <div class="hmeta" id="hmeta"></div>
   </div>
+
   <div class="statsrow">
-    <div class="spill"><div class="v" id="s-read">0</div><div class="l">Lidos</div></div>
-    <div class="spill"><div class="v" id="s-rem">365</div><div class="l">Restantes</div></div>
-    <div class="spill"><div class="v" id="s-adv">0</div><div class="l" id="s-adv-l">Adiant.</div></div>
+    <div class="spill"><div class="v" id="s-read">0</div><div class="l">lidos</div></div>
+    <div class="spill"><div class="v" id="s-rem">365</div><div class="l">restantes</div></div>
+    <div class="spill" id="s-stat-box"><div class="v" id="s-stat">—</div><div class="l" id="s-stat-l">situação</div></div>
   </div>
+
   <div class="xpsec">
     <div class="xphdr"><span class="xplvl" id="xplvl">Semente</span><span class="xppts" id="xppts">0 XP</span></div>
-    <div class="xpbar"><div class="xpfill" id="xpfill" style="width:0%"></div></div>
+    <div class="bar" role="progressbar" aria-label="Progresso do nível" id="xpbar"><span id="xpfill" style="width:0%"></span></div>
   </div>
-  <div class="tcard">
-    <div class="tlbl">📖 DIA <span id="tdaynum">1</span> · <span id="tdatestr">01 JAN</span></div>
+
+  <section class="card tcard" aria-label="Leitura de hoje">
+    <div class="tlbl" id="tlbl">Dia 1</div>
     <div class="treading" id="treading">Gênesis 1-3</div>
     <div class="tsub" id="tsect">Pentateuco</div>
-    <button class="btnok" id="btnok" onclick="toggleToday()">Marcar como lido ✓</button>
-  </div>
-  <div class="strkbox">
-    <div class="sflame">🔥</div>
-    <div class="sinfo">
-      <div class="snum" id="snum">0</div>
-      <div class="slbl">dias seguidos</div>
+    <div class="tactions">
+      <button class="btn btn-gold w100" id="btnok">Marcar como lido ✓</button>
+      <a class="btn-link" id="openread" target="_blank" rel="noopener">Abrir leitura na Bíblia Online ↗</a>
     </div>
-    <div class="sbest"><span id="sbest">0</span>recorde</div>
-  </div>
-  <div class="recdays">
-    <div class="recdays-hdr">
-      <h3 style="margin-bottom:0">Últimos 14 dias</h3>
-      <div class="recdays-count" id="recdays-count"></div>
-    </div>
-    <div class="drow" id="drow"></div>
-  </div>
-</div>
+  </section>
 
-<!-- PLANO -->
-<div id="s-plano" class="screen">
-  <div class="shdr">
-    <div class="plano-header-row">
-      <div>
-        <div class="stitle">Plano de Leitura</div>
-        <div class="ssub" id="planosub">365 dias · Bíblia completa em 2026</div>
-      </div>
-      <button class="btnmarktudo" id="btnmarktudo" onclick="markAllMonth()">Marcar Tudo ✓</button>
+  <section class="card catch" id="catch" hidden aria-label="Leituras pendentes">
+    <h3 id="catch-t">Você tem leituras pendentes</h3>
+    <p id="catch-p"></p>
+    <div class="next">
+      <div class="n" id="catch-n">—</div>
+      <div class="t" id="catch-r">—</div>
+      <button class="btn btn-gold mini" id="catch-btn">Lido ✓</button>
     </div>
-    <div class="mtabs" id="mtabs"></div>
+    <button class="btn-link" id="catch-mode" hidden style="margin-top:6px">Seguir no meu ritmo (começar do Dia 1 hoje) →</button>
+  </section>
+
+  <section class="card strk" aria-label="Sequência">
+    <div class="sflame" aria-hidden="true">🔥</div>
+    <div><div class="snum" id="snum">0</div><div class="slbl" id="slbl">dias seguidos lendo</div></div>
+    <div class="sbest"><b id="sbest">0</b>recorde</div>
+  </section>
+
+  <section class="rec" aria-label="Últimos 14 dias">
+    <div class="rechdr"><span class="label">Últimos 14 dias</span><span class="recount" id="recount"></span></div>
+    <div class="drow" id="drow" data-hscroll></div>
+  </section>
+</main>
+
+<!-- ═════════ PLANO ═════════ -->
+<section id="s-plano" class="screen" aria-labelledby="plano-t">
+  <div class="shdr">
+    <h1 class="stitle" id="plano-t">Plano de Leitura</h1>
+    <div class="ssub" id="planosub"></div>
+    <div class="mtabs" id="mtabs" data-hscroll role="group" aria-label="Mês"></div>
+  </div>
+  <div class="planbar">
+    <span class="info" id="monthinfo"></span>
+    <button class="btn-link" id="btnmark">Marcar pendentes do mês</button>
   </div>
   <div class="plist" id="plist"></div>
-</div>
+</section>
 
-<!-- PROGRESSO -->
-<div id="s-prog" class="screen">
-  <div class="shdr">
-    <div class="stitle">Progresso</div>
-    <div class="ssub">Sua jornada em 2026</div>
-  </div>
+<!-- ═════════ PROGRESSO ═════════ -->
+<section id="s-prog" class="screen" aria-labelledby="prog-t">
+  <div class="shdr"><h1 class="stitle" id="prog-t">Progresso</h1><div class="ssub" id="progsub"></div></div>
   <div class="phero">
     <div class="ringwrap">
-      <svg viewBox="0 0 172 172">
-        <defs>
-          <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#6A5510"/>
-            <stop offset="100%" style="stop-color:#E8C84A"/>
-          </linearGradient>
-        </defs>
-        <circle fill="none" stroke="var(--bg2)" stroke-width="11" cx="86" cy="86" r="74"/>
-        <circle id="pring" fill="none" stroke="url(#gg)" stroke-width="11" cx="86" cy="86" r="74"
-          stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465"/>
+      <svg viewBox="0 0 172 172" aria-hidden="true">
+        <defs><linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#7A6214"/><stop offset="100%" stop-color="#E8C84A"/></linearGradient></defs>
+        <circle fill="none" stroke="#1C1910" stroke-width="11" cx="86" cy="86" r="74"/>
+        <circle id="pring" fill="none" stroke="url(#gg)" stroke-width="11" cx="86" cy="86" r="74" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465"/>
       </svg>
-      <div class="rctr"><div class="rpct" id="rpct">0%</div><div class="rptlbl">completo</div></div>
+      <div class="rctr"><div class="rpct" id="rpct">0%</div><div class="rlbl">da Bíblia lida</div></div>
     </div>
-    <div class="pphrase" id="pphrase">"Lâmpada para os meus pés é a tua palavra"</div>
+    <div class="pphrase" id="pphrase"></div>
   </div>
   <div class="pgrid">
-    <div class="pstat"><div class="ic">📚</div><div class="vv" id="pg-read">0</div><div class="ll">Dias lidos</div></div>
-    <div class="pstat"><div class="ic">🔥</div><div class="vv" id="pg-strk">0</div><div class="ll">Sequência atual</div></div>
-    <div class="pstat"><div class="ic">⚡</div><div class="vv" id="pg-xp">0</div><div class="ll">XP acumulado</div></div>
-    <div class="pstat"><div class="ic">🏆</div><div class="vv" id="pg-bdg">0</div><div class="ll">Conquistas</div></div>
+    <div class="pstat"><div class="ic">📚</div><div class="vv" id="pg-read">0</div><div class="ll">leituras concluídas</div></div>
+    <div class="pstat"><div class="ic">📖</div><div class="vv" id="pg-ch">0</div><div class="ll">capítulos lidos</div></div>
+    <div class="pstat"><div class="ic">🔥</div><div class="vv" id="pg-strk">0</div><div class="ll">recorde de sequência</div></div>
+    <div class="pstat"><div class="ic">🏆</div><div class="vv" id="pg-bdg">0</div><div class="ll">conquistas</div></div>
   </div>
-  <div class="secsec">
-    <div class="sectitle">Seções da Bíblia</div>
+  <section class="card">
+    <div class="label" style="margin-bottom:14px">Seções da Bíblia</div>
     <div id="seclist"></div>
-  </div>
-  <div class="heatsec">
-    <div class="heattitle">Calendário 2026</div>
-    <div class="hgrid" id="hgrid"></div>
-  </div>
-</div>
+  </section>
+  <section class="card">
+    <div class="label">Mapa do plano · 365 dias</div>
+    <div class="hgrid" id="hgrid" role="img" aria-label="Mapa de leituras do plano"></div>
+    <div class="legend">
+      <span><i style="background:var(--gold)"></i>lido</span>
+      <span><i style="background:var(--teal)"></i>hoje</span>
+      <span><i style="background:var(--amber);opacity:.45"></i>pendente</span>
+      <span><i style="background:var(--bg2);border:1px solid var(--border)"></i>a ler</span>
+    </div>
+  </section>
+</section>
 
-<!-- CONQUISTAS -->
-<div id="s-conq" class="screen">
-  <div class="shdr">
-    <div class="stitle">Conquistas</div>
-    <div class="ssub" id="bdgsub">0 / 12 desbloqueadas</div>
-  </div>
+<!-- ═════════ CONQUISTAS ═════════ -->
+<section id="s-conq" class="screen" aria-labelledby="conq-t">
+  <div class="shdr"><h1 class="stitle" id="conq-t">Conquistas</h1><div class="ssub" id="bdgsub"></div></div>
   <div class="agrid" id="agrid"></div>
-</div>
+</section>
 
-<!-- CONFIG -->
-<div id="s-cfg" class="screen">
-  <div class="shdr"><div class="stitle">Configurações</div><div class="ssub">Personalize sua experiência</div></div>
+<!-- ═════════ CONFIG ═════════ -->
+<section id="s-cfg" class="screen" aria-labelledby="cfg-t">
+  <div class="shdr"><h1 class="stitle" id="cfg-t">Configurações</h1><div class="ssub">Personalize sua jornada</div></div>
   <div class="csec">
     <h3>Perfil</h3>
     <div class="citem">
-      <div class="cileft"><div class="cilbl">Seu nome</div><div class="cisub">Aparece no cabeçalho</div></div>
-      <input type="text" class="cinput" id="cfgname" placeholder="Seu nome" oninput="saveName(this.value)">
+      <div class="cil"><label class="cit" for="cfgname">Seu nome</label><div class="cis">Aparece na saudação</div></div>
+      <input type="text" class="cinput" id="cfgname" placeholder="Seu nome" maxlength="24" autocomplete="given-name">
     </div>
-    <h3>Notificações</h3>
-    <div class="citem">
-      <div class="cileft"><div class="cilbl">Lembrete diário</div><div class="cisub" id="remsub">Desativado</div></div>
-      <div class="tog" id="remtog" onclick="toggleReminder()"></div>
-    </div>
-    <div class="citem" id="remtimebox" style="display:none">
-      <div class="cileft"><div class="cilbl">Horário do lembrete</div></div>
-      <input type="time" class="cinput" id="remtime" value="07:00" onchange="saveReminderTime(this.value)">
-    </div>
-    <h3>Sobre o plano</h3>
-    <div class="citem">
-      <div class="cileft"><div class="cilbl">Igreja</div></div>
-      <span style="color:var(--dim);font-size:12px">Zion Church</span>
-    </div>
-    <div class="citem">
-      <div class="cileft"><div class="cilbl">Ano</div></div>
-      <span style="color:var(--dim);font-size:12px">2026</span>
-    </div>
-    <div class="citem">
-      <div class="cileft"><div class="cilbl">Dias lidos</div></div>
-      <span style="color:var(--gold);font-size:14px;font-weight:700" id="cfgread">0</span>
-    </div>
-    <h3>Dados</h3>
-    <div class="citem" onclick="exportProgress()" style="cursor:pointer">
-      <div class="cileft"><div class="cilbl">Exportar progresso</div><div class="cisub">Salvar como texto</div></div>
-      <span style="color:var(--gold);font-size:18px">↗</span>
-    </div>
-    <button class="btndanger" onclick="confirmReset()">⚠ Zerar progresso</button>
-  </div>
-  <div style="text-align:center;padding:16px 22px 32px;color:var(--dim2);font-size:11px;line-height:2">
-    Bíblia 365 · Zion Church · 2026<br>
-    <span style="color:var(--golddim);letter-spacing:8px">✦ ✦ ✦</span><br>
-    zionchurch.org.br
-  </div>
-</div>
 
-<nav id="bnav">
-  <button class="nb on" onclick="nav('home')" id="nb-home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-    Início
-  </button>
-  <button class="nb" onclick="nav('plano')" id="nb-plano">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>
-    Plano
-  </button>
-  <button class="nb" onclick="nav('prog')" id="nb-prog">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    Progresso
-  </button>
-  <button class="nb" onclick="nav('conq')" id="nb-conq">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-    Conquistas
-  </button>
-  <button class="nb" onclick="nav('cfg')" id="nb-cfg">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-    Config
-  </button>
+    <h3>Plano</h3>
+    <div class="citem" style="display:block">
+      <div class="cit">Como você lê</div>
+      <div class="cis" id="modedesc"></div>
+      <div class="seg" role="group" aria-label="Modo do plano">
+        <button data-mode="igreja">Com a igreja</button>
+        <button data-mode="pessoal">No meu ritmo</button>
+      </div>
+    </div>
+    <div class="citem">
+      <div class="cil"><label class="cit" for="cfgstart">Início do plano</label><div class="cis">Dia 1 = esta data</div></div>
+      <input type="date" class="cinput" id="cfgstart" style="width:152px">
+    </div>
+
+    <h3>Lembrete diário</h3>
+    <div class="citem">
+      <div class="cil"><label class="cit" for="remtime">Horário</label><div class="cis">Usado no evento do calendário</div></div>
+      <input type="time" class="cinput" id="remtime" value="07:00" style="width:100px">
+    </div>
+    <button class="citem" id="btnics">
+      <div class="cil"><div class="cit">Adicionar lembrete ao calendário</div><div class="cis">Cria um evento diário no calendário do celular, com alerta no horário escolhido. Funciona mesmo com o app fechado.</div></div>
+      <span class="carrow" aria-hidden="true">＋</span>
+    </button>
+
+    <h3>Seus dados</h3>
+    <button class="citem" id="btnexport">
+      <div class="cil"><div class="cit">Fazer backup</div><div class="cis">Salva um arquivo com todo o seu progresso</div></div>
+      <span class="carrow" aria-hidden="true">↓</span>
+    </button>
+    <button class="citem" id="btnimport">
+      <div class="cil"><div class="cit">Restaurar backup</div><div class="cis">Use ao trocar de celular ou navegador</div></div>
+      <span class="carrow" aria-hidden="true">↑</span>
+    </button>
+    <input type="file" id="importfile" accept="application/json,.json" hidden>
+    <button class="citem" id="btnshare">
+      <div class="cil"><div class="cit">Compartilhar progresso</div><div class="cis">Envie um resumo para o grupo ou líder</div></div>
+      <span class="carrow" aria-hidden="true">↗</span>
+    </button>
+    <p class="cis" style="margin:4px 4px 16px">Seu progresso fica salvo só neste aparelho. Faça um backup de vez em quando.</p>
+
+    <button class="btn btn-danger" id="btnreset">Zerar progresso</button>
+  </div>
+  <div class="foot">Bíblia 365 · Zion Church<br><span style="color:var(--golddim);letter-spacing:8px">✦ ✦ ✦</span><br>zionchurch.org.br</div>
+</section>
+
+<nav id="bnav" aria-label="Navegação principal">
+  <button class="nb" data-nav="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Início</button>
+  <button class="nb" data-nav="plano"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>Plano</button>
+  <button class="nb" data-nav="prog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Progresso</button>
+  <button class="nb" data-nav="conq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>Conquistas</button>
+  <button class="nb" data-nav="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Config</button>
 </nav>
-</div><!-- #app -->
+</div>
 
-<div id="toast">✓ Leitura marcada! +10 XP</div>
-<canvas id="ptcl"></canvas>
+<div id="toast" role="status" aria-live="polite"></div>
+<canvas id="ptcl" aria-hidden="true"></canvas>
 
-<!-- MODAL DIA -->
-<div id="daymodal">
-  <div class="backdrop" onclick="closeDayModal()"></div>
+<!-- Modal do dia -->
+<div class="sheetwrap" id="daymodal" role="dialog" aria-modal="true" aria-labelledby="dm-reading">
+  <div class="bd" data-close></div>
   <div class="sheet">
-    <div class="sheethandle"></div>
-    <div class="dmlbl" id="dm-lbl">📖 DIA 1 · 01/JAN</div>
-    <div class="dmreading" id="dm-reading">Gênesis 1-3</div>
-    <div class="dmsect" id="dm-sect">Pentateuco</div>
-    <button class="dmbtn mark" id="dm-btn" onclick="toggleDayFromModal()">Marcar como lido ✓</button>
-    <button class="dmbtnclose" onclick="closeDayModal()">Fechar</button>
+    <div class="handle"></div>
+    <div class="dmlbl" id="dm-lbl"></div>
+    <div class="dmreading" id="dm-reading"></div>
+    <div class="dmsect" id="dm-sect"></div>
+    <div class="dmnote" id="dm-note"></div>
+    <button class="btn btn-gold" id="dm-btn">Marcar como lido ✓</button>
+    <a class="btn btn-ghost" id="dm-open" target="_blank" rel="noopener" style="width:100%;margin-bottom:10px;text-decoration:none">Abrir leitura ↗</a>
+    <button class="btn btn-ghost" data-close style="border-color:var(--border)">Fechar</button>
   </div>
 </div>
-<div id="cel">
+
+<!-- Boas-vindas -->
+<div class="sheetwrap" id="onboard" role="dialog" aria-modal="true" aria-labelledby="ob-t">
+  <div class="bd"></div>
+  <div class="sheet ob">
+    <div class="handle"></div>
+    <h2 id="ob-t">Bem-vindo ao Bíblia 365</h2>
+    <p>A Bíblia inteira em um ano, uma leitura por dia. Como você quer acompanhar?</p>
+    <div class="field"><label for="ob-name">Seu nome (opcional)</label><input id="ob-name" maxlength="24" autocomplete="given-name" placeholder="Como quer ser chamado"></div>
+    <button class="opt" data-obmode="igreja" aria-pressed="true"><b>⛪ Com a igreja</b><span id="ob-igreja-d"></span></button>
+    <button class="opt" data-obmode="pessoal" aria-pressed="false"><b>🌱 No meu ritmo</b><span>Começa hoje no Dia 1 (Gênesis 1-3). Ideal para quem está chegando agora.</span></button>
+    <button class="btn btn-gold" id="ob-go" style="margin-top:6px">Começar</button>
+  </div>
+</div>
+
+<div id="cel" role="dialog" aria-modal="true" aria-labelledby="celtitle">
   <div class="celbox">
     <div class="celicon" id="celicon">🏆</div>
     <div class="celtitle" id="celtitle">Conquista!</div>
-    <div class="celmsg" id="celmsg">Você desbloqueou uma nova conquista.</div>
-    <button class="celclose" onclick="closeCel()">Incrível!</button>
+    <div class="celmsg" id="celmsg"></div>
+    <button class="btn btn-gold" id="celclose" style="width:100%">Amém!</button>
   </div>
 </div>
 
 <script>
-// ════════════════════════════════════
-// READING PLAN — 365 DAYS
-// ════════════════════════════════════
-const READINGS = [
-  "Gênesis 1-3","Gênesis 4-6","Gênesis 7-9","Gênesis 10-12","Gênesis 13-16",
-  "Gênesis 17-19","Gênesis 20-22","Gênesis 23-24","Gênesis 25-27","Gênesis 28-30",
-  "Gênesis 31-32","Gênesis 33-35","Gênesis 36-37","Gênesis 38-40","Gênesis 41-42",
-  "Gênesis 43-45","Gênesis 46-47","Gênesis 48-50","Êxodo 1-4","Êxodo 5-7",
-  "Êxodo 8-10","Êxodo 11-13","Êxodo 14-16","Êxodo 17-20","Êxodo 21-23",
-  "Êxodo 24-26","Êxodo 27-29","Êxodo 30-32","Êxodo 33-35","Êxodo 36-38",
-  "Êxodo 39-40","Levítico 1-4","Levítico 5-7","Levítico 8-10","Levítico 11-13",
-  "Levítico 14-15","Levítico 16-18","Levítico 19-21","Levítico 22-23","Levítico 24-25",
-  "Levítico 26-27","Números 1-2","Números 3-4","Números 5-7","Números 8-10",
-  "Números 11-13","Números 14-15","Números 16-18","Números 19-21","Números 22-24",
-  "Números 25-26","Números 27-29","Números 30-32","Números 33-34","Números 35-36",
-  "Deuteronômio 1-2","Deuteronômio 3-4","Deuteronômio 5-7","Deuteronômio 8-11","Deuteronômio 12-14",
-  "Deuteronômio 15-18","Deuteronômio 19-22","Deuteronômio 23-26","Deuteronômio 27-28","Deuteronômio 29-31",
-  "Deuteronômio 32-34","Josué 1-4","Josué 5-8","Josué 9-11","Josué 12-14",
-  "Josué 15-16","Josué 17-19","Josué 20-22","Josué 23-24","Juízes 1-3",
-  "Juízes 4-6","Juízes 7-9","Juízes 10-12","Juízes 13-16","Juízes 17-19",
-  "Juízes 20-21","Rute 1-4","1 Samuel 1-3","1 Samuel 4-7","1 Samuel 8-10",
-  "1 Samuel 11-14","1 Samuel 15-17","1 Samuel 18-20","1 Samuel 21-24","1 Samuel 25-27",
-  "1 Samuel 28-31","2 Samuel 1-3","2 Samuel 4-7","2 Samuel 8-11","2 Samuel 12-14",
-  "2 Samuel 15-17","2 Samuel 18-19","2 Samuel 20-22","2 Samuel 23-24","1 Reis 1-2",
-  "1 Reis 3-5","1 Reis 6-7","1 Reis 8-9","1 Reis 10-11","1 Reis 12-14",
-  "1 Reis 15-17","1 Reis 18-20","1 Reis 21-22","2 Reis 1-4","2 Reis 5-7",
-  "2 Reis 8-10","2 Reis 11-14","2 Reis 15-17","2 Reis 18-19","2 Reis 20-23",
-  "2 Reis 24-25","1 Crônicas 1-2","1 Crônicas 3-5","1 Crônicas 6","1 Crônicas 7-8",
-  "1 Crônicas 9-11","1 Crônicas 12-15","1 Crônicas 16-18","1 Crônicas 19-22","1 Crônicas 23-25",
-  "1 Crônicas 26-29","2 Crônicas 1-4","2 Crônicas 5-7","2 Crônicas 8-11","2 Crônicas 12-15",
-  "2 Crônicas 16-19","2 Crônicas 20-23","2 Crônicas 24-26","2 Crônicas 27-29","2 Crônicas 30-32",
-  "2 Crônicas 33-36","Esdras 1-2","Esdras 3-6","Esdras 7-10","Neemias 1-4",
-  "Neemias 5-7","Neemias 8-10","Neemias 11-13","Ester 1-4","Ester 5-10",
-  "Jó 1-2","Jó 3-5","Jó 6-8","Jó 9-11","Jó 12-15",
-  "Jó 16-20","Jó 21-25","Jó 26-28","Jó 29-31","Jó 32-34",
-  "Jó 35-37","Jó 38-40","Jó 41-42","Salmos 1-7","Salmos 8-14",
-  "Salmos 15-18","Salmos 19-23","Salmos 24-29","Salmos 30-34","Salmos 35-37",
-  "Salmos 38-42","Salmos 43-47","Salmos 48-53","Salmos 54-59","Salmos 60-66",
-  "Salmos 67-69","Salmos 70-73","Salmos 74-78","Salmos 79-83","Salmos 84-89",
-  "Salmos 90-94","Salmos 95-102","Salmos 103-105","Salmos 106-107","Salmos 108-113",
-  "Salmos 114-118","Salmos 119","Salmos 120-130","Salmos 131-136","Salmos 137-143",
-  "Salmos 144-148","Salmos 149-150","Provérbios 1-3","Provérbios 4-6","Provérbios 7-9",
-  "Provérbios 10-12","Provérbios 13-15","Provérbios 16-18","Provérbios 19-21","Provérbios 22-24",
-  "Provérbios 25-27","Provérbios 28-31","Eclesiastes 1-4","Eclesiastes 5-8","Eclesiastes 9-12",
-  "Cantares 1-5","Cantares 6-8","Isaías 1-3","Isaías 4-7","Isaías 8-10",
-  "Isaías 11-14","Isaías 15-20","Isaías 21-24","Isaías 25-28","Isaías 29-32",
-  "Isaías 33-36","Isaías 37-40","Isaías 41-43","Isaías 44-47","Isaías 48-51",
-  "Isaías 52-57","Isaías 58-62","Isaías 63-66","Jeremias 1-3","Jeremias 4-6",
-  "Jeremias 7-9","Jeremias 10-13","Jeremias 14-17","Jeremias 18-22","Jeremias 23-25",
-  "Jeremias 26-29","Jeremias 30-32","Jeremias 33-36","Jeremias 37-40","Jeremias 41-44",
-  "Jeremias 45-48","Jeremias 49-50","Jeremias 51-52","Lamentações 1-3","Lamentações 4-5",
-  "Ezequiel 1-4","Ezequiel 5-8","Ezequiel 9-12","Ezequiel 13-16","Ezequiel 17-20",
-  "Ezequiel 21-23","Ezequiel 24-27","Ezequiel 28-30","Ezequiel 31-33","Ezequiel 34-36",
-  "Ezequiel 37-39","Ezequiel 40-42","Ezequiel 43-45","Ezequiel 46-48","Daniel 1-3",
-  "Daniel 4-6","Daniel 7-9","Daniel 10-12","Oséias 1-5","Oséias 6-10",
-  "Oséias 11-14","Joel 1-3","Amós 1-5","Amós 6-9","Obadias 1",
-  "Jonas 1-4","Miquéias 1-7","Naum 1-3","Habacuque 1-3","Sofonias 1-3",
-  "Ageu 1-2","Zacarias 1-6","Zacarias 7-11","Zacarias 12-14","Malaquias 1-4",
-  "Mateus 1-4","Mateus 5-6","Mateus 7-9","Mateus 10-11","Mateus 12-13",
-  "Mateus 14-15","Mateus 16-18","Mateus 19-21","Mateus 22-23","Mateus 24-25",
-  "Mateus 26","Mateus 27-28","Marcos 1-2","Marcos 3-4","Marcos 5-6",
-  "Marcos 7-8","Marcos 9-10","Marcos 11-12","Marcos 13-14","Marcos 15-16",
-  "Lucas 1","Lucas 2-3","Lucas 4-5","Lucas 6-7","Lucas 8-9",
-  "Lucas 10-11","Lucas 12-13","Lucas 14-16","Lucas 17-18","Lucas 19-20",
-  "Lucas 21-22","Lucas 23-24","João 1-2","João 3-4","João 5-6",
-  "João 7-8","João 9-10","João 11-12","João 13-15","João 16-18",
-  "João 19-21","Atos 1-2","Atos 3-5","Atos 6-7","Atos 8-9",
-  "Atos 10-11","Atos 12-13","Atos 14-16","Atos 17-19","Atos 20-21",
-  "Atos 22-24","Atos 25-28","Romanos 1-3","Romanos 4-7","Romanos 8-9",
-  "Romanos 10-12","Romanos 13-16","1 Coríntios 1-4","1 Coríntios 5-7","1 Coríntios 8-10",
-  "1 Coríntios 11-13","1 Coríntios 14-16","2 Coríntios 1-4","2 Coríntios 5-8","2 Coríntios 9-13",
-  "Gálatas 1-3","Gálatas 4-6","Efésios 1-4","Efésios 5-6","Filipenses 1-4",
-  "Colossenses 1-4","1 Tessalonicenses 1-5","2 Tessalonicenses 1-3","1 Timóteo 1-6","2 Timóteo 1-4",
-  "Tito 1-3","Filemom 1","Hebreus 1-5","Hebreus 6-9","Hebreus 10-11",
-  "Hebreus 12-13","Tiago 1-5","1 Pedro 1-3","1 Pedro 4-5","2 Pedro 1-3",
-  "1 João 1-5","2 João 1","3 João 1","Judas 1","Apocalipse 1-4",
-  "Apocalipse 5-8","Apocalipse 9-12","Apocalipse 13-16","Apocalipse 17-19","Apocalipse 20-22"
-];
+// ═══════════════════════ PLANO (365 dias · 1.189 capítulos) ═══════════════════════
+const READINGS = ["Gênesis 1-3","Gênesis 4-6","Gênesis 7-9","Gênesis 10-12","Gênesis 13-16","Gênesis 17-19","Gênesis 20-22","Gênesis 23-24","Gênesis 25-27","Gênesis 28-30","Gênesis 31-32","Gênesis 33-35","Gênesis 36-37","Gênesis 38-40","Gênesis 41-42","Gênesis 43-45","Gênesis 46-47","Gênesis 48-50","Êxodo 1-4","Êxodo 5-7","Êxodo 8-10","Êxodo 11-13","Êxodo 14-16","Êxodo 17-20","Êxodo 21-23","Êxodo 24-26","Êxodo 27-29","Êxodo 30-32","Êxodo 33-35","Êxodo 36-38","Êxodo 39-40","Levítico 1-4","Levítico 5-7","Levítico 8-10","Levítico 11-13","Levítico 14-15","Levítico 16-18","Levítico 19-21","Levítico 22-23","Levítico 24-25","Levítico 26-27","Números 1-2","Números 3-4","Números 5-7","Números 8-10","Números 11-13","Números 14-15","Números 16-18","Números 19-21","Números 22-24","Números 25-26","Números 27-29","Números 30-32","Números 33-34","Números 35-36","Deuteronômio 1-2","Deuteronômio 3-4","Deuteronômio 5-7","Deuteronômio 8-11","Deuteronômio 12-14","Deuteronômio 15-18","Deuteronômio 19-22","Deuteronômio 23-26","Deuteronômio 27-28","Deuteronômio 29-31","Deuteronômio 32-34","Josué 1-4","Josué 5-8","Josué 9-11","Josué 12-14","Josué 15-16","Josué 17-19","Josué 20-22","Josué 23-24","Juízes 1-3","Juízes 4-6","Juízes 7-9","Juízes 10-12","Juízes 13-16","Juízes 17-19","Juízes 20-21","Rute 1-4","1 Samuel 1-3","1 Samuel 4-7","1 Samuel 8-10","1 Samuel 11-14","1 Samuel 15-17","1 Samuel 18-20","1 Samuel 21-24","1 Samuel 25-27","1 Samuel 28-31","2 Samuel 1-3","2 Samuel 4-7","2 Samuel 8-11","2 Samuel 12-14","2 Samuel 15-17","2 Samuel 18-19","2 Samuel 20-22","2 Samuel 23-24","1 Reis 1-2","1 Reis 3-5","1 Reis 6-7","1 Reis 8-9","1 Reis 10-11","1 Reis 12-14","1 Reis 15-17","1 Reis 18-20","1 Reis 21-22","2 Reis 1-4","2 Reis 5-7","2 Reis 8-10","2 Reis 11-14","2 Reis 15-17","2 Reis 18-19","2 Reis 20-23","2 Reis 24-25","1 Crônicas 1-2","1 Crônicas 3-5","1 Crônicas 6","1 Crônicas 7-8","1 Crônicas 9-11","1 Crônicas 12-15","1 Crônicas 16-18","1 Crônicas 19-22","1 Crônicas 23-25","1 Crônicas 26-29","2 Crônicas 1-4","2 Crônicas 5-7","2 Crônicas 8-11","2 Crônicas 12-15","2 Crônicas 16-19","2 Crônicas 20-23","2 Crônicas 24-26","2 Crônicas 27-29","2 Crônicas 30-32","2 Crônicas 33-36","Esdras 1-2","Esdras 3-6","Esdras 7-10","Neemias 1-4","Neemias 5-7","Neemias 8-10","Neemias 11-13","Ester 1-4","Ester 5-10","Jó 1-2","Jó 3-5","Jó 6-8","Jó 9-11","Jó 12-15","Jó 16-20","Jó 21-25","Jó 26-28","Jó 29-31","Jó 32-34","Jó 35-37","Jó 38-40","Jó 41-42","Salmos 1-7","Salmos 8-14","Salmos 15-18","Salmos 19-23","Salmos 24-29","Salmos 30-34","Salmos 35-37","Salmos 38-42","Salmos 43-47","Salmos 48-53","Salmos 54-59","Salmos 60-66","Salmos 67-69","Salmos 70-73","Salmos 74-78","Salmos 79-83","Salmos 84-89","Salmos 90-94","Salmos 95-102","Salmos 103-105","Salmos 106-107","Salmos 108-113","Salmos 114-118","Salmos 119","Salmos 120-130","Salmos 131-136","Salmos 137-143","Salmos 144-148","Salmos 149-150","Provérbios 1-3","Provérbios 4-6","Provérbios 7-9","Provérbios 10-12","Provérbios 13-15","Provérbios 16-18","Provérbios 19-21","Provérbios 22-24","Provérbios 25-27","Provérbios 28-31","Eclesiastes 1-4","Eclesiastes 5-8","Eclesiastes 9-12","Cantares 1-5","Cantares 6-8","Isaías 1-3","Isaías 4-7","Isaías 8-10","Isaías 11-14","Isaías 15-20","Isaías 21-24","Isaías 25-28","Isaías 29-32","Isaías 33-36","Isaías 37-40","Isaías 41-43","Isaías 44-47","Isaías 48-51","Isaías 52-57","Isaías 58-62","Isaías 63-66","Jeremias 1-3","Jeremias 4-6","Jeremias 7-9","Jeremias 10-13","Jeremias 14-17","Jeremias 18-22","Jeremias 23-25","Jeremias 26-29","Jeremias 30-32","Jeremias 33-36","Jeremias 37-40","Jeremias 41-44","Jeremias 45-48","Jeremias 49-50","Jeremias 51-52","Lamentações 1-3","Lamentações 4-5","Ezequiel 1-4","Ezequiel 5-8","Ezequiel 9-12","Ezequiel 13-16","Ezequiel 17-20","Ezequiel 21-23","Ezequiel 24-27","Ezequiel 28-30","Ezequiel 31-33","Ezequiel 34-36","Ezequiel 37-39","Ezequiel 40-42","Ezequiel 43-45","Ezequiel 46-48","Daniel 1-3","Daniel 4-6","Daniel 7-9","Daniel 10-12","Oséias 1-5","Oséias 6-10","Oséias 11-14","Joel 1-3","Amós 1-5","Amós 6-9","Obadias 1","Jonas 1-4","Miquéias 1-7","Naum 1-3","Habacuque 1-3","Sofonias 1-3","Ageu 1-2","Zacarias 1-6","Zacarias 7-11","Zacarias 12-14","Malaquias 1-4","Mateus 1-4","Mateus 5-6","Mateus 7-9","Mateus 10-11","Mateus 12-13","Mateus 14-15","Mateus 16-18","Mateus 19-21","Mateus 22-23","Mateus 24-25","Mateus 26","Mateus 27-28","Marcos 1-2","Marcos 3-4","Marcos 5-6","Marcos 7-8","Marcos 9-10","Marcos 11-12","Marcos 13-14","Marcos 15-16","Lucas 1","Lucas 2-3","Lucas 4-5","Lucas 6-7","Lucas 8-9","Lucas 10-11","Lucas 12-13","Lucas 14-16","Lucas 17-18","Lucas 19-20","Lucas 21-22","Lucas 23-24","João 1-2","João 3-4","João 5-6","João 7-8","João 9-10","João 11-12","João 13-15","João 16-18","João 19-21","Atos 1-2","Atos 3-5","Atos 6-7","Atos 8-9","Atos 10-11","Atos 12-13","Atos 14-16","Atos 17-19","Atos 20-21","Atos 22-24","Atos 25-28","Romanos 1-3","Romanos 4-7","Romanos 8-9","Romanos 10-12","Romanos 13-16","1 Coríntios 1-4","1 Coríntios 5-7","1 Coríntios 8-10","1 Coríntios 11-13","1 Coríntios 14-16","2 Coríntios 1-4","2 Coríntios 5-8","2 Coríntios 9-13","Gálatas 1-3","Gálatas 4-6","Efésios 1-4","Efésios 5-6","Filipenses 1-4","Colossenses 1-4","1 Tessalonicenses 1-5","2 Tessalonicenses 1-3","1 Timóteo 1-6","2 Timóteo 1-4","Tito 1-3","Filemom 1","Hebreus 1-5","Hebreus 6-9","Hebreus 10-11","Hebreus 12-13","Tiago 1-5","1 Pedro 1-3","1 Pedro 4-5","2 Pedro 1-3","1 João 1-5","2 João 1","3 João 1","Judas 1","Apocalipse 1-4","Apocalipse 5-8","Apocalipse 9-12","Apocalipse 13-16","Apocalipse 17-19","Apocalipse 20-22"];
 
-const MONTHS = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
-// day 1 boundaries per month (1-indexed day of plan)
-const MSTART = [1,32,60,91,121,152,182,213,244,274,305,335];
-const MEND   = [31,59,90,120,151,181,212,243,273,304,334,365];
+// Abreviações da Bíblia Online (bibliaonline.com.br/acf/<abrev>/<cap>)
+const ABBR = {"Gênesis":"gn","Êxodo":"ex","Levítico":"lv","Números":"nm","Deuteronômio":"dt","Josué":"js","Juízes":"jz","Rute":"rt","1 Samuel":"1sm","2 Samuel":"2sm","1 Reis":"1rs","2 Reis":"2rs","1 Crônicas":"1cr","2 Crônicas":"2cr","Esdras":"ed","Neemias":"ne","Ester":"et","Jó":"jó","Salmos":"sl","Provérbios":"pv","Eclesiastes":"ec","Cantares":"ct","Isaías":"is","Jeremias":"jr","Lamentações":"lm","Ezequiel":"ez","Daniel":"dn","Oséias":"os","Joel":"jl","Amós":"am","Obadias":"ob","Jonas":"jn","Miquéias":"mq","Naum":"na","Habacuque":"hc","Sofonias":"sf","Ageu":"ag","Zacarias":"zc","Malaquias":"ml","Mateus":"mt","Marcos":"mc","Lucas":"lc","João":"jo","Atos":"at","Romanos":"rm","1 Coríntios":"1co","2 Coríntios":"2co","Gálatas":"gl","Efésios":"ef","Filipenses":"fp","Colossenses":"cl","1 Tessalonicenses":"1ts","2 Tessalonicenses":"2ts","1 Timóteo":"1tm","2 Timóteo":"2tm","Tito":"tt","Filemom":"fm","Hebreus":"hb","Tiago":"tg","1 Pedro":"1pe","2 Pedro":"2pe","1 João":"1jo","2 João":"2jo","3 João":"3jo","Judas":"jd","Apocalipse":"ap"};
 
 const SECTIONS = [
   {name:"Pentateuco", icon:"📜", s:1,  e:66},
@@ -690,708 +488,514 @@ const SECTIONS = [
   {name:"Poéticos",   icon:"🎵", s:146,e:202},
   {name:"Profetas",   icon:"🌩️", s:203,e:270},
   {name:"Evangelhos", icon:"✝️", s:271,e:311},
-  {name:"NT & Cartas",icon:"📨", s:312,e:365},
+  {name:"Atos, Cartas e Apocalipse", icon:"📨", s:312,e:365},
 ];
-
-function sectionOf(d){
-  for(const s of SECTIONS) if(d>=s.s && d<=s.e) return s.name;
-  return "";
-}
-
-const LEVELS=[
-  {name:"Semente",   min:0,   max:600},
-  {name:"Discípulo", min:600, max:1500},
-  {name:"Profeta",   min:1500,max:3000},
-  {name:"Apóstolo",  min:3000,max:5500},
-  {name:"Guardião",  min:5500,max:10000},
+const LEVELS = [
+  {name:"Semente",min:0,max:600},{name:"Discípulo",min:600,max:1500},{name:"Profeta",min:1500,max:3000},
+  {name:"Apóstolo",min:3000,max:4500},{name:"Guardião",min:4500,max:5475}
 ];
+const PHRASES = [
+  '“Lâmpada para os meus pés é a tua palavra.” — Sl 119:105',
+  '“Medita nele dia e noite.” — Js 1:8',
+  '“A tua palavra é a verdade.” — Jo 17:17',
+  '“A fé vem pelo ouvir a palavra.” — Rm 10:17',
+  '“Nem só de pão viverá o homem.” — Mt 4:4'
+];
+const range = (a, b) => Array.from({length: b - a + 1}, (_, i) => a + i);
+const inRange = (s, a, b) => range(a, b).filter(d => s.has(d)).length;
 
+// Conquistas: tudo calculado a partir do progresso real (nada acumulado → não dá para burlar)
 const BADGES = [
-  {id:"first",  icon:"🌱", name:"Primeira Leitura",    desc:"Completou o 1º dia",           check:s=>s.has(1)},
-  {id:"week",   icon:"🔥", name:"Fogo Aceso",           desc:"7 dias consecutivos",           check:(_,b)=>b>=7},
-  {id:"30d",    icon:"⚡", name:"Perseverança",         desc:"30 dias consecutivos",          check:(_,b)=>b>=30},
-  {id:"penta",  icon:"📜", name:"Pentateuco",           desc:"Dias 1–66 completos",           check:s=>range(1,66).every(d=>s.has(d))},
-  {id:"hist",   icon:"🏛️", name:"Livros Históricos",   desc:"Dias 67–145 completos",         check:s=>range(67,145).every(d=>s.has(d))},
-  {id:"psalms", icon:"🎵", name:"Salmista",             desc:"Todos os Salmos lidos",         check:s=>range(159,187).every(d=>s.has(d))},
-  {id:"100d",   icon:"💎", name:"Centenário",           desc:"100 dias lidos",                check:s=>s.size>=100},
-  {id:"half",   icon:"🌟", name:"Meio Caminho",         desc:"183 dias lidos",                check:s=>s.size>=183},
-  {id:"proph",  icon:"🌩️", name:"Profetas",            desc:"Dias 203–270 completos",        check:s=>range(203,270).every(d=>s.has(d))},
-  {id:"gosp",   icon:"✝️", name:"Evangelhos",          desc:"Mateus, Marcos, Lucas e João",  check:s=>range(271,311).every(d=>s.has(d))},
-  {id:"nt",     icon:"📨", name:"NT Completo",          desc:"Dias 312–365 completos",        check:s=>range(312,365).every(d=>s.has(d))},
-  {id:"full",   icon:"🏆", name:"Guardião da Palavra",  desc:"Todos os 365 dias! Aleluia!",  check:s=>s.size>=365},
+  {id:"first", icon:"🌱", name:"Primeira Leitura",   desc:"Concluiu a primeira leitura",   prog:c => [Math.min(c.total,1),1]},
+  {id:"week",  icon:"🔥", name:"Fogo Aceso",          desc:"7 dias seguidos lendo",         prog:c => [Math.min(c.best,7),7]},
+  {id:"30d",   icon:"⚡", name:"Perseverança",        desc:"30 dias seguidos lendo",        prog:c => [Math.min(c.best,30),30]},
+  {id:"penta", icon:"📜", name:"Pentateuco",          desc:"Gênesis a Deuteronômio",        prog:c => [inRange(c.set,1,66),66]},
+  {id:"hist",  icon:"🏛️", name:"Livros Históricos",  desc:"Josué a Ester",                 prog:c => [inRange(c.set,67,145),79]},
+  {id:"psalms",icon:"🎵", name:"Salmista",            desc:"Todos os 150 Salmos",           prog:c => [inRange(c.set,159,187),29]},
+  {id:"100d",  icon:"💎", name:"Centenário",          desc:"100 leituras concluídas",       prog:c => [Math.min(c.total,100),100]},
+  {id:"half",  icon:"🌟", name:"Meio Caminho",        desc:"183 leituras concluídas",       prog:c => [Math.min(c.total,183),183]},
+  {id:"proph", icon:"🌩️", name:"Profetas",           desc:"Isaías a Malaquias",            prog:c => [inRange(c.set,203,270),68]},
+  {id:"gosp",  icon:"✝️", name:"Evangelhos",         desc:"Mateus, Marcos, Lucas e João",  prog:c => [inRange(c.set,271,311),41]},
+  {id:"nt",    icon:"📨", name:"Igreja Primitiva",    desc:"Atos ao Apocalipse",            prog:c => [inRange(c.set,312,365),54]},
+  {id:"full",  icon:"🏆", name:"Guardião da Palavra", desc:"A Bíblia inteira!",             prog:c => [c.total,365]}
 ];
 
-const PHRASES=[
-  '"Lâmpada para os meus pés é a tua palavra" — Sl 119:105',
-  '"Medita nele dia e noite" — Js 1:8',
-  '"Tua palavra é a verdade" — Jo 17:17',
-  '"A fé vem pelo ouvir a palavra" — Rm 10:17',
-  '"Não só de pão viverá o homem" — Mt 4:4',
-];
+// ═══════════════════════ DATAS ═══════════════════════
+const DAY = 864e5;
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseISO = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const todayISO = () => iso(new Date());
+const daysBetween = (a, b) => Math.round((parseISO(b) - parseISO(a)) / DAY);
+const MON = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const WD = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const fmtShort = d => `${pad(d.getDate())} ${MON[d.getMonth()]}`;
 
-function range(a,b){return Array.from({length:b-a+1},(_,i)=>a+i)}
+// ═══════════════════════ ESTADO ═══════════════════════
+// done: { [dia do plano]: 'AAAA-MM-DD' em que foi marcado }
+let S = { v: 3, name: '', mode: 'igreja', start: `${new Date().getFullYear()}-01-01`, done: {}, remTime: '07:00', celebrated: [], onboarded: false };
 
-// ════════════════════════════════════
-// STATE
-// ════════════════════════════════════
-let S = {
-  completed: new Set(),
-  bestStreak: 0,
-  xp: 0,
-  name: "",
-  remOn: false,
-  remTime: "07:00",
-  unlockedBadges: new Set(),
-};
-
-function save(){
-  localStorage.setItem('b365v2', JSON.stringify({
-    completed:[...S.completed],
-    bestStreak:S.bestStreak,
-    xp:S.xp,
-    name:S.name,
-    remOn:S.remOn,
-    remTime:S.remTime,
-    unlockedBadges:[...S.unlockedBadges],
-  }));
+function save() { try { localStorage.setItem('b365v3', JSON.stringify(S)); } catch (e) {} }
+function load() {
+  try {
+    const raw = localStorage.getItem('b365v3');
+    if (raw) { S = { ...S, ...JSON.parse(raw) }; return; }
+    // Migração da versão anterior (b365v2): assume leitura no próprio dia
+    const old = JSON.parse(localStorage.getItem('b365v2') || 'null');
+    if (old) {
+      S.name = old.name || ''; S.remTime = old.remTime || '07:00';
+      S.mode = 'igreja'; S.start = '2026-01-01'; S.onboarded = true;
+      (old.completed || []).forEach(d => { S.done[d] = iso(new Date(2026, 0, d)); });
+      S.celebrated = BADGES.filter(b => { const [a, t] = b.prog(stats()); return a >= t; }).map(b => b.id);
+      save();
+    }
+  } catch (e) {}
 }
 
-function load(){
-  try{
-    const r=localStorage.getItem('b365v2');
-    if(!r) return;
-    const d=JSON.parse(r);
-    S.completed=new Set(d.completed||[]);
-    S.bestStreak=d.bestStreak||0;
-    S.xp=d.xp||0;
-    S.name=d.name||'';
-    S.remOn=d.remOn||false;
-    S.remTime=d.remTime||'07:00';
-    S.unlockedBadges=new Set(d.unlockedBadges||[]);
-  }catch(e){}
+const planDate = d => new Date(parseISO(S.start).getTime() + (d - 1) * DAY);
+function todayDay() { return Math.max(1, Math.min(365, daysBetween(S.start, todayISO()) + 1)); }
+const beforeStart = () => daysBetween(S.start, todayISO()) < 0;
+const planOver = () => daysBetween(S.start, todayISO()) + 1 > 365;
+const isDone = d => !!S.done[d];
+const sectionOf = d => (SECTIONS.find(s => d >= s.s && d <= s.e) || {}).name || '';
+function readingURL(d) {
+  const m = READINGS[d - 1].match(/^(.+?) (\d+)/);
+  return `https://www.bibliaonline.com.br/acf/${encodeURIComponent(ABBR[m[1]])}/${m[2]}`;
+}
+function chaptersOf(d) { const m = READINGS[d - 1].match(/(\d+)(?:-(\d+))?$/); return (+(m[2] || m[1])) - (+m[1]) + 1; }
+
+// Tudo derivado do estado → consistente e à prova de "marcar/desmarcar"
+function stats() {
+  const set = new Set(Object.keys(S.done).map(Number));
+  const total = set.size;
+  const today = todayDay();
+  const pending = range(1, planOver() ? 365 : today - 1).filter(d => !set.has(d));
+  // XP: 10 por leitura + 5 se marcada no próprio dia do plano
+  let xp = 0;
+  for (const d of set) xp += 10 + (S.done[d] === iso(planDate(d)) ? 5 : 0);
+  // Sequência = dias do calendário seguidos em que você leu (hábito real)
+  const dates = [...new Set(Object.values(S.done))].sort();
+  let best = 0, run = 0, prev = null;
+  for (const s of dates) { run = prev && daysBetween(prev, s) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = s; }
+  const ds = new Set(dates); let cur = 0;
+  let c = new Date(); if (!ds.has(iso(c))) c = new Date(c.getTime() - DAY);
+  while (ds.has(iso(c))) { cur++; c = new Date(c.getTime() - DAY); }
+  const chapters = [...set].reduce((a, d) => a + chaptersOf(d), 0);
+  return { set, total, today, pending, xp, best, cur, readToday: ds.has(todayISO()), chapters };
+}
+const levelOf = xp => LEVELS.find(l => xp >= l.min && xp < l.max) || LEVELS[LEVELS.length - 1];
+
+// ═══════════════════════ AÇÕES ═══════════════════════
+function setDone(d, on) {
+  if (on) S.done[d] = todayISO(); else delete S.done[d];
+  save(); renderAll(); checkBadges();
 }
 
-function calcStreak(){
-  const today=todayDay();
-  let streak=0,d=today;
-  while(S.completed.has(d)&&d>=1){streak++;d--;}
-  // also count backward from yesterday if today not done
-  if(!S.completed.has(today)){
-    let d2=today-1;while(d2>=1&&S.completed.has(d2)){streak++;d2--;}
-    // but then streak breaks after today
-    if(!S.completed.has(today)) streak=0;
-    // recalc properly
-    streak=0;let dd=today-1;
-    while(dd>=1&&S.completed.has(dd)){streak++;dd--;}
+function toggleDay(d, fromEl) {
+  const was = isDone(d);
+  if (!was && fromEl) {
+    const r = fromEl.getBoundingClientRect();
+    spawnXpFloat(r.left + r.width / 2, r.top, d === todayDay() ? '+15 XP' : '+10 XP');
   }
-  // redo: count from today backward
-  streak=0;let dd=today;
-  while(dd>=1&&S.completed.has(dd)){streak++;dd--;}
-  if(!S.completed.has(today)){
-    streak=0;dd=today-1;
-    while(dd>=1&&S.completed.has(dd)){streak++;dd--;}
+  setDone(d, !was);
+  toast(was ? 'Leitura desmarcada' : d === todayDay() ? '✓ Leitura de hoje concluída! +15 XP' : '✓ Leitura concluída! +10 XP');
+}
+
+// ═══════════════════════ NAVEGAÇÃO ═══════════════════════
+let cur = 'home';
+const NAV_ORDER = ['home', 'plano', 'prog', 'conq', 'cfg'];
+function nav(id) {
+  if (id === cur) return;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b => b.removeAttribute('aria-current'));
+  document.getElementById('s-' + id).classList.add('active');
+  document.querySelector(`[data-nav="${id}"]`).setAttribute('aria-current', 'page');
+  cur = id;
+  if (id === 'plano') renderPlano(true);
+  if (id === 'prog') renderProg();
+  if (id === 'conq') renderConq();
+  if (id === 'cfg') renderCfg();
+}
+document.querySelectorAll('.nb').forEach(b => b.addEventListener('click', () => nav(b.dataset.nav)));
+
+// Gesto de deslizar entre abas (ignora áreas com rolagem horizontal)
+let sx = 0, sy = 0, lock = false;
+const app = document.getElementById('app');
+app.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; lock = !!e.target.closest('[data-hscroll], input'); }, {passive: true});
+app.addEventListener('touchend', e => {
+  if (lock) return;
+  const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+  if (Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * .7) return;
+  const i = NAV_ORDER.indexOf(cur);
+  if (dx < 0 && i < NAV_ORDER.length - 1) nav(NAV_ORDER[i + 1]);
+  if (dx > 0 && i > 0) nav(NAV_ORDER[i - 1]);
+}, {passive: true});
+
+// ═══════════════════════ HOME ═══════════════════════
+const $ = id => document.getElementById(id);
+function renderHome() {
+  const st = stats(), d = st.today;
+  const h = new Date().getHours();
+  const g = h < 12 ? 'Bom dia ☀️' : h < 18 ? 'Boa tarde 🌤️' : 'Boa noite 🌙';
+  $('grt').textContent = S.name ? `${g}, ${S.name}` : g;
+
+  if (beforeStart()) {
+    $('htitle').textContent = 'Plano começa em breve';
+    $('hmeta').textContent = `Início em ${fmtShort(parseISO(S.start))}. Enquanto isso, você já pode adiantar leituras no Plano.`;
+  } else if (planOver()) {
+    $('htitle').textContent = st.total >= 365 ? 'Plano concluído! 🏆' : 'O período do plano terminou';
+    $('hmeta').textContent = st.total >= 365 ? 'Você leu a Bíblia inteira. Glória a Deus!' : `Faltam ${365 - st.total} leituras — continue no seu ritmo ou recomece em Config.`;
+  } else {
+    $('htitle').textContent = 'Leitura de Hoje';
+    $('hmeta').textContent = `${S.mode === 'igreja' ? 'Com a igreja' : 'No seu ritmo'} · dia ${d} de 365`;
   }
-  S.streak=streak;
-  S.bestStreak=Math.max(S.bestStreak,streak);
-}
 
-function todayDay(){
-  const now=new Date();
-  const start=new Date(2026,0,1);
-  const diff=Math.floor((now-start)/(864e5))+1;
-  return Math.max(1,Math.min(365,diff));
-}
+  // Estatísticas
+  $('s-read').textContent = st.total;
+  $('s-rem').textContent = 365 - st.total;
+  const box = $('s-stat-box'), n = st.pending.length;
+  const extra = st.total - (isDone(d) ? d : d - 1);
+  if (n === 0) {
+    box.className = 'spill ok';
+    $('s-stat').textContent = extra > 0 ? '+' + extra : '✓';
+    $('s-stat-l').textContent = extra > 0 ? 'adiantado' : 'em dia';
+  } else { box.className = 'spill late'; $('s-stat').textContent = n; $('s-stat-l').textContent = n === 1 ? 'pendente' : 'pendentes'; }
 
-function dayDate(d){
-  const dt=new Date(2026,0,d);
-  const dd=String(dt.getDate()).padStart(2,'0');
-  const mm=MONTHS[dt.getMonth()];
-  return `${dd}/${mm}`;
-}
+  // Nível
+  const lv = levelOf(st.xp), pct = Math.min(100, (st.xp - lv.min) / (lv.max - lv.min) * 100);
+  $('xplvl').textContent = lv.name;
+  $('xppts').textContent = `${st.xp.toLocaleString('pt-BR')} XP` + (lv !== LEVELS[LEVELS.length - 1] ? ` · faltam ${(lv.max - st.xp).toLocaleString('pt-BR')} p/ o próximo nível` : '');
+  $('xpfill').style.width = pct + '%';
+  $('xpbar').setAttribute('aria-valuenow', Math.round(pct));
 
-function dayMonth(d){
-  return new Date(2026,0,d).getMonth();
-}
+  // Card de hoje
+  $('tlbl').textContent = `📖 Dia ${d} · ${fmtShort(planDate(d))}`;
+  $('treading').textContent = READINGS[d - 1];
+  $('tsect').textContent = `${sectionOf(d)} · ${chaptersOf(d)} ${chaptersOf(d) > 1 ? 'capítulos' : 'capítulo'}`;
+  $('openread').href = readingURL(d);
+  const btn = $('btnok'), dn = isDone(d);
+  btn.textContent = dn ? '✓ Lido! Toque para desfazer' : 'Marcar como lido ✓';
+  btn.className = 'btn w100 ' + (dn ? 'btn-done' : 'btn-gold') + (btn.classList.contains('pulse') ? ' pulse' : '');
 
-// ════════════════════════════════════
-// NAVIGATION
-// ════════════════════════════════════
-let curScreen='home';
-function nav(id){
-  if(id===curScreen) return;
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('s-'+id).classList.add('active');
-  document.getElementById('nb-'+id).classList.add('on');
-  curScreen=id;
-  if(id==='prog') renderProg();
-  if(id==='conq') renderConq();
-  if(id==='plano') renderPlano();
-  if(id==='cfg') renderCfg();
-}
+  // Pendências
+  const cc = $('catch');
+  if (n > 0 && !beforeStart()) {
+    cc.hidden = false;
+    const next = st.pending[0];
+    $('catch-t').textContent = n === 1 ? 'Uma leitura pendente' : `${n} leituras pendentes`;
+    const left = Math.max(1, 365 - d);
+    const perDay = Math.ceil(n / left);
+    $('catch-p').textContent = n <= 3
+      ? 'Tudo bem — dá para colocar em dia rapidinho.'
+      : n <= 14
+        ? `Lendo uma leitura extra por dia, você fica em dia em ${n} dias. Sem culpa: continue de onde parou.`
+        : `Para terminar no prazo seriam ~${perDay + 1} leituras por dia. Se preferir, siga no seu ritmo — nada do que você já leu se perde.`;
+    $('catch-mode').hidden = !(n > 14 && S.mode === 'igreja');
+    $('catch-n').textContent = next;
+    $('catch-r').innerHTML = `${READINGS[next - 1]}<small>${fmtShort(planDate(next))} · ${sectionOf(next)}</small>`;
+    $('catch-btn').onclick = e => toggleDay(next, e.currentTarget);
+  } else cc.hidden = true;
 
-// ════════════════════════════════════
-// HOME RENDER
-// ════════════════════════════════════
-function renderHome(){
-  const today=todayDay();
-  const rd=READINGS[today-1];
-  const h=new Date().getHours();
-  const grt=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
-  const grts=h<12?'Bom dia ☀️':h<18?'Boa tarde 🌤️':'Boa noite 🌙';
-  document.getElementById('grt').textContent=S.name?`${grts}, ${S.name}`:(grts);
-  document.getElementById('htitle').textContent='Leitura de Hoje';
-  document.getElementById('tdaynum').textContent=today;
-  document.getElementById('tdatestr').textContent=dayDate(today);
-  document.getElementById('treading').textContent=rd;
-  document.getElementById('tsect').textContent=sectionOf(today);
+  // Sequência
+  $('snum').textContent = st.cur;
+  $('slbl').textContent = st.cur === 1 ? 'dia seguido lendo' : 'dias seguidos lendo';
+  $('sbest').textContent = st.best;
 
-  const done=S.completed.has(today);
-  const btn=document.getElementById('btnok');
-  btn.textContent=done?'✓ Lido hoje!':'Marcar como lido ✓';
-  const hasPulse=btn.classList.contains('pulse');
-  btn.className='btnok'+(done?' done':'')+(hasPulse?' pulse':'');
-
-  // stats
-  const total=S.completed.size;
-  const rem=365-total;
-  const shouldHaveDone=today-1;
-  const adv=total-shouldHaveDone;
-  document.getElementById('s-read').textContent=total;
-  document.getElementById('s-rem').textContent=rem;
-  document.getElementById('s-adv').textContent=Math.abs(adv);
-  document.getElementById('s-adv-l').textContent=adv>=0?'Adiant.':'Atraso';
-
-  // XP + level
-  const lvl=getLevel();
-  document.getElementById('xplvl').textContent=lvl.name;
-  document.getElementById('xppts').textContent=S.xp+' XP';
-  const pct=Math.min(100,((S.xp-lvl.min)/(lvl.max-lvl.min))*100);
-  document.getElementById('xpfill').style.width=pct+'%';
-
-  // streak
-  calcStreak();
-  document.getElementById('snum').textContent=S.streak;
-  document.getElementById('sbest').textContent=S.bestStreak;
-
-  // recent 14 days
-  const row=document.getElementById('drow');
-  row.innerHTML='';
-  const dayIcons={done:'✓',today:'📖',miss:'✕',fut:'·'};
-  const weekdays=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  let doneCount=0;
-  for(let i=13;i>=0;i--){
-    const d=today-i;
-    if(d<1) continue;
-    const dt=new Date(2026,0,d);
-    const st=d===today?'today':S.completed.has(d)?'done':d<today?'miss':'fut';
-    if(st==='done'||st==='today') doneCount++;
-    const el=document.createElement('div');
-    el.className='ddot '+st;
-    el.dataset.day=d;
-    el.innerHTML=`
-      <div class="ddot-wd ${st}">${weekdays[dt.getDay()]}</div>
-      <div class="ddot-num ${st}">${dt.getDate()}</div>
-      <div class="ddot-icon">${dayIcons[st]}</div>
-      <div class="ddot-div ${st}"></div>
-      <div class="ddot-reading ${st}">${READINGS[d-1]||''}</div>
-    `;
-    el.onclick=()=>openDayModal(d);
+  // Últimos 14 dias
+  const row = $('drow'); row.innerHTML = '';
+  let cnt = 0, shown = 0;
+  for (let i = 13; i >= 0; i--) {
+    const dd = d - i; if (dd < 1 || beforeStart()) continue;
+    shown++;
+    const done = isDone(dd), isT = dd === d;
+    if (done) cnt++;
+    const cls = done ? 'done' : isT ? 'today' : 'miss';
+    const dt = planDate(dd);
+    const el = document.createElement('button');
+    el.className = 'dd ' + cls + (isT && done ? ' today' : '');
+    el.setAttribute('aria-label', `Dia ${dd}, ${READINGS[dd - 1]}, ${done ? 'lido' : isT ? 'hoje' : 'pendente'}`);
+    el.innerHTML = `<div class="wd">${isT ? 'Hoje' : WD[dt.getDay()]}</div><div class="num">${dt.getDate()}</div>
+      <div class="ic">${done ? '✓' : isT ? '📖' : '•'}</div><div class="rd">${READINGS[dd - 1]}</div>`;
+    el.onclick = () => openDay(dd);
     row.appendChild(el);
   }
-  const countEl=document.getElementById('recdays-count');
-  if(countEl) countEl.textContent=doneCount+'/14 lidos';
-  // scroll to today
-  setTimeout(()=>{row.scrollLeft=row.scrollWidth;},50);
+  $('recount').textContent = shown ? `${cnt}/${shown} lidos` : '';
+  requestAnimationFrame(() => { row.scrollLeft = row.scrollWidth; });
 }
+$('btnok').addEventListener('click', e => {
+  const b = e.currentTarget; b.classList.add('pulse');
+  b.addEventListener('animationend', () => b.classList.remove('pulse'), {once: true});
+  toggleDay(todayDay(), b);
+});
 
-function getLevel(){
-  for(const l of LEVELS) if(S.xp>=l.min&&S.xp<l.max) return l;
-  return LEVELS[LEVELS.length-1];
-}
-
-// ════════════════════════════════════
-// TOGGLE DAY
-// ════════════════════════════════════
-function toggleToday(){
-  const btn=document.getElementById('btnok');
-  btn.classList.add('pulse');
-  btn.addEventListener('animationend',()=>btn.classList.remove('pulse'),{once:true});
-  const d=todayDay();
-  if(!S.completed.has(d)){
-    const rect=btn.getBoundingClientRect();
-    spawnXpFloat(rect.left+rect.width/2, rect.top, '+15 XP');
+// ═══════════════════════ PLANO ═══════════════════════
+let activeMonth = null; // 'AAAA-MM'
+function monthsOfPlan() {
+  const map = new Map();
+  for (let d = 1; d <= 365; d++) {
+    const dt = planDate(d), k = `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}`;
+    if (!map.has(k)) map.set(k, { key: k, label: MON[dt.getMonth()].toUpperCase() + (dt.getFullYear() !== parseISO(S.start).getFullYear() ? ` ${String(dt.getFullYear()).slice(2)}` : ''), days: [] });
+    map.get(k).days.push(d);
   }
-  toggleDay(d);
+  return [...map.values()];
 }
-
-function toggleDay(d){
-  const wasCompleted=S.completed.has(d);
-  if(wasCompleted){
-    S.completed.delete(d);
-    S.xp=Math.max(0,S.xp-15);
-    toast('Leitura desmarcada');
-  } else {
-    S.completed.add(d);
-    const bonus=(d===todayDay())?5:0;
-    S.xp+=10+bonus;
-    calcStreak();
-    S.bestStreak=Math.max(S.bestStreak,S.streak);
-    const msg=bonus>0?'✓ Leitura marcada! +15 XP':'✓ Marcado! +10 XP';
-    toast(msg);
-    checkBadges();
-    checkStreakCelebration();
+function renderPlano(reset) {
+  const st = stats(), today = st.today, months = monthsOfPlan();
+  if (reset || !activeMonth) {
+    const t = planDate(today); activeMonth = `${t.getFullYear()}-${pad(t.getMonth() + 1)}`;
+    if (!months.find(m => m.key === activeMonth)) activeMonth = months[0].key;
   }
-  calcStreak();
-  save();
-  renderHome();
-  if(curScreen==='plano') renderPlano(false);
-}
-
-function checkStreakCelebration(){
-  const s=S.streak;
-  if(s===7) celebrate('🔥','7 dias seguidos!','Uma semana sem parar. Continue firme!');
-  else if(s===30) celebrate('⚡','30 dias seguidos!','Um mês de consistência. Você é incrível!');
-  else if(s===100) celebrate('💎','100 dias seguidos!','Lendário! Nada te para!');
-}
-
-// ════════════════════════════════════
-// PLANO RENDER
-// ════════════════════════════════════
-let activeMonth=null;
-function renderPlano(resetMonth=true){
-  const today=todayDay();
-  if(resetMonth) activeMonth=dayMonth(today);
-
-  // Tabs
-  const tabs=document.getElementById('mtabs');
-  tabs.innerHTML='';
-  MONTHS.forEach((m,i)=>{
-    const b=document.createElement('button');
-    b.className='mtab'+(i===activeMonth?' on':'');
-    b.textContent=m;
-    b.onclick=()=>{activeMonth=i;renderPlano(false);};
+  $('planosub').textContent = `${st.total} de 365 leituras (${Math.round(st.total / 365 * 100)}%)`;
+  const tabs = $('mtabs'); tabs.innerHTML = '';
+  months.forEach(m => {
+    const b = document.createElement('button');
+    const doneM = m.days.filter(isDone).length;
+    b.className = 'mtab'; b.setAttribute('aria-pressed', m.key === activeMonth);
+    b.innerHTML = `${m.label}<span class="cnt">${doneM}/${m.days.length}</span>`;
+    b.onclick = () => { activeMonth = m.key; renderPlano(false); };
     tabs.appendChild(b);
   });
-
-  const ms=MSTART[activeMonth],me=MEND[activeMonth];
-  const total=S.completed.size;
-  document.getElementById('planosub').textContent=
-    `${total} de 365 dias lidos (${Math.round(total/365*100)}%)`;
-
-  const list=document.getElementById('plist');
-  list.innerHTML='';
-  for(let d=ms;d<=me;d++){
-    const div=document.createElement('div');
-    div.className='pitem';
-    const done=S.completed.has(d);
-    const isToday=d===today;
-    const missed=d<today&&!done;
-    let cls=done?'done':isToday?'today':missed?'miss':'fut';
-
-    div.innerHTML=`
-      <div class="pdnum ${cls}">${d}</div>
-      <div class="pinfo">
-        <div class="prtext ${done?'done':''}">${READINGS[d-1]}</div>
-        <div class="pdate">${dayDate(d)} · ${sectionOf(d)}</div>
-      </div>
-      <div class="pchk ${done?'on':''}">
-        ${done?'<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,2" fill="none" stroke="#080603" stroke-width="2" stroke-linecap="round"/></svg>':''}
-      </div>`;
-    div.onclick=()=>openDayModal(d);
-    list.appendChild(div);
-  }
-
-  // scroll to today if same month
-  if(activeMonth===dayMonth(today)){
-    setTimeout(()=>{
-      const t=list.querySelector('.pdnum.today');
-      if(t) t.scrollIntoView({behavior:'smooth',block:'center'});
-    },100);
-  }
-
-  // Atualizar estado botão Marcar Tudo
-  updateMarkAllBtn();
+  const month = months.find(m => m.key === activeMonth);
+  const pend = month.days.filter(d => !isDone(d) && d <= today && !beforeStart());
+  $('monthinfo').textContent = `${month.days.filter(isDone).length} de ${month.days.length} lidas`;
+  const mb = $('btnmark');
+  mb.hidden = pend.length === 0;
+  mb.textContent = `Marcar ${pend.length} pendente${pend.length > 1 ? 's' : ''} até hoje`;
+  mb.onclick = () => {
+    if (!confirm(`Marcar ${pend.length} leitura${pend.length > 1 ? 's' : ''} deste mês como lida${pend.length > 1 ? 's' : ''}?`)) return;
+    const t = todayISO(); pend.forEach(d => { S.done[d] = t; });
+    save(); renderAll(); checkBadges(); toast(`✓ ${pend.length} leitura${pend.length > 1 ? 's' : ''} marcada${pend.length > 1 ? 's' : ''}`);
+  };
+  const list = $('plist'); list.innerHTML = '';
+  month.days.forEach(d => {
+    const done = isDone(d), isT = d === today && !beforeStart(), miss = d < today && !done && !beforeStart();
+    const cls = done ? 'done' : isT ? 'today' : miss ? 'miss' : '';
+    const it = document.createElement('button');
+    it.className = 'pitem';
+    it.setAttribute('aria-label', `Dia ${d}, ${READINGS[d - 1]}, ${done ? 'lido' : isT ? 'hoje' : miss ? 'pendente' : 'a ler'}`);
+    it.innerHTML = `<div class="pdn ${cls}">${d}</div>
+      <div class="pinfo"><div class="prt ${done ? 'done' : ''}">${READINGS[d - 1]}</div>
+      <div class="pdate">${WD[planDate(d).getDay()]}, ${fmtShort(planDate(d))} · ${sectionOf(d)}${isT ? ' · <b style="color:var(--teal)">hoje</b>' : ''}</div></div>
+      <div class="pchk ${done ? 'on' : ''}">${done ? '<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,2" fill="none" stroke="#080603" stroke-width="2" stroke-linecap="round"/></svg>' : ''}</div>`;
+    it.onclick = () => openDay(d);
+    list.appendChild(it);
+  });
+  if (reset) setTimeout(() => {
+    tabs.querySelector('[aria-pressed="true"]')?.scrollIntoView({inline: 'center', block: 'nearest'});
+    list.querySelector('.pdn.today')?.scrollIntoView({block: 'center'});
+  }, 60);
 }
 
-// ════════════════════════════════════
-// MARCAR TUDO DO MÊS
-// ════════════════════════════════════
-function markAllMonth(){
-  const ms=MSTART[activeMonth],me=MEND[activeMonth];
-  const allDone=range(ms,me).every(d=>S.completed.has(d));
-  if(allDone){
-    // Desmarcar todos do mês
-    for(let d=ms;d<=me;d++) S.completed.delete(d);
-  } else {
-    // Marcar todos do mês
-    let newOnes=0;
-    for(let d=ms;d<=me;d++){
-      if(!S.completed.has(d)){S.completed.add(d);newOnes++;}
-    }
-    if(newOnes>0){
-      S.xp+=newOnes*15;
-      checkBadges();
-      calcStreak();
-    }
-  }
-  save();
-  renderPlano(false);
-  renderHome();
-}
-
-function updateMarkAllBtn(){
-  const btn=document.getElementById('btnmarktudo');
-  if(!btn||activeMonth===null) return;
-  const ms=MSTART[activeMonth],me=MEND[activeMonth];
-  const allDone=range(ms,me).every(d=>S.completed.has(d));
-  if(allDone){
-    btn.textContent='✓ Tudo marcado';
-    btn.classList.add('all-done');
-  } else {
-    btn.textContent='Marcar Tudo ✓';
-    btn.classList.remove('all-done');
-  }
-}
-
-// ════════════════════════════════════
-// PROGRESSO RENDER
-// ════════════════════════════════════
-function renderProg(){
-  calcStreak();
-  const total=S.completed.size;
-  const pct=Math.round(total/365*100);
-  document.getElementById('rpct').textContent=pct+'%';
-
-  const circ=465;
-  const offset=circ-(circ*pct/100);
-  document.getElementById('pring').style.strokeDashoffset=offset;
-
-  document.getElementById('pg-read').textContent=total;
-  document.getElementById('pg-strk').textContent=S.streak;
-  document.getElementById('pg-xp').textContent=S.xp;
-  const unlockedCount=[...BADGES].filter(b=>{
-    const check=b.check(S.completed,S.bestStreak);
-    return check;
-  }).length;
-  document.getElementById('pg-bdg').textContent=unlockedCount;
-
-  document.getElementById('pphrase').textContent=PHRASES[Math.floor(total/74)%PHRASES.length];
-
-  // Sections
-  const sl=document.getElementById('seclist');sl.innerHTML='';
-  for(const sec of SECTIONS){
-    const total_sec=sec.e-sec.s+1;
-    const done_sec=range(sec.s,sec.e).filter(d=>S.completed.has(d)).length;
-    const pct_sec=Math.round(done_sec/total_sec*100);
-    sl.innerHTML+=`
-      <div class="secitem">
-        <div class="sechdr">
-          <span class="secname">${sec.icon} ${sec.name}</span>
-          <span class="secpct">${pct_sec}%</span>
-        </div>
-        <div class="secbar"><div class="secfill" style="width:${pct_sec}%"></div></div>
-      </div>`;
-  }
-
-  // Heatmap
-  const hg=document.getElementById('hgrid');hg.innerHTML='';
-  const today=todayDay();
-  for(let d=1;d<=365;d++){
-    const el=document.createElement('div');
-    el.className='hcell '+(d===today?'today':S.completed.has(d)?'done':d<today?'miss':'fut');
-    el.title=`Dia ${d}: ${READINGS[d-1]}`;
+// ═══════════════════════ PROGRESSO ═══════════════════════
+function renderProg() {
+  const st = stats(), pct = Math.round(st.total / 365 * 100);
+  $('progsub').textContent = `Início em ${fmtShort(parseISO(S.start))} de ${parseISO(S.start).getFullYear()} · ${S.mode === 'igreja' ? 'com a igreja' : 'no seu ritmo'}`;
+  $('rpct').textContent = pct + '%';
+  $('pring').style.strokeDashoffset = 465 - 465 * pct / 100;
+  $('pg-read').textContent = st.total;
+  $('pg-ch').textContent = st.chapters.toLocaleString('pt-BR');
+  $('pg-strk').textContent = st.best;
+  $('pg-bdg').textContent = BADGES.filter(b => { const [a, t] = b.prog(st); return a >= t; }).length;
+  $('pphrase').textContent = PHRASES[Math.floor(st.total / 74) % PHRASES.length];
+  $('seclist').innerHTML = SECTIONS.map(s => {
+    const tot = s.e - s.s + 1, dn = inRange(st.set, s.s, s.e), p = Math.round(dn / tot * 100);
+    return `<div class="secitem"><div class="sechdr"><span>${s.icon} ${s.name}</span><span class="secpct">${dn}/${tot}</span></div>
+      <div class="bar" role="progressbar" aria-label="${s.name}" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><span style="width:${p}%"></span></div></div>`;
+  }).join('');
+  const hg = $('hgrid'); hg.innerHTML = '';
+  for (let d = 1; d <= 365; d++) {
+    const el = document.createElement('div');
+    el.className = 'hc ' + (isDone(d) ? 'done' : d === st.today && !beforeStart() ? 'today' : d < st.today && !beforeStart() ? 'miss' : '');
+    el.title = `Dia ${d} · ${fmtShort(planDate(d))}: ${READINGS[d - 1]}`;
     hg.appendChild(el);
   }
 }
 
-// ════════════════════════════════════
-// CONQUISTAS RENDER
-// ════════════════════════════════════
-function renderConq(){
-  calcStreak();
-  const grid=document.getElementById('agrid');grid.innerHTML='';
-  let unlocked=0;
-  for(const b of BADGES){
-    const on=b.check(S.completed,S.bestStreak);
-    if(on) unlocked++;
-    grid.innerHTML+=`
-      <div class="bcard ${on?'on':'off'}">
-        <span class="bicon">${b.icon}</span>
-        <div class="bname">${b.name}</div>
-        <div class="bdesc">${b.desc}</div>
-        ${on?'<div class="bunlk">✦ Desbloqueado</div>':''}
-      </div>`;
-  }
-  document.getElementById('bdgsub').textContent=`${unlocked} / ${BADGES.length} desbloqueadas`;
+// ═══════════════════════ CONQUISTAS ═══════════════════════
+function renderConq() {
+  const st = stats(); let n = 0;
+  $('agrid').innerHTML = BADGES.map(b => {
+    const [a, t] = b.prog(st), on = a >= t; if (on) n++;
+    return `<div class="bcard ${on ? 'on' : 'off'}"><span class="bicon" aria-hidden="true">${b.icon}</span>
+      <div class="bname">${b.name}</div><div class="bdesc">${b.desc}</div>
+      ${on ? '<div class="bunlk">✦ Desbloqueada</div>' : `<div class="bprog"><div class="bar"><span style="width:${a / t * 100}%"></span></div><small>${a} de ${t}</small></div>`}</div>`;
+  }).join('');
+  $('bdgsub').textContent = `${n} de ${BADGES.length} desbloqueadas`;
 }
-
-// ════════════════════════════════════
-// BADGES CHECK
-// ════════════════════════════════════
-function checkBadges(){
-  calcStreak();
-  for(const b of BADGES){
-    if(!S.unlockedBadges.has(b.id)&&b.check(S.completed,S.bestStreak)){
-      S.unlockedBadges.add(b.id);
-      save();
-      setTimeout(()=>celebrate(b.icon,'Conquista desbloqueada!',`"${b.name}" — ${b.desc}`),800);
-      break;
+function checkBadges() {
+  const st = stats();
+  BADGES.forEach(b => {
+    const [a, t] = b.prog(st);
+    if (a >= t && !S.celebrated.includes(b.id)) {
+      S.celebrated.push(b.id); save();
+      setTimeout(() => celebrate(b.icon, 'Conquista desbloqueada!', `“${b.name}” — ${b.desc}`), 600);
     }
-  }
+  });
 }
 
-// ════════════════════════════════════
-// CONFIG RENDER
-// ════════════════════════════════════
-function renderCfg(){
-  document.getElementById('cfgname').value=S.name;
-  document.getElementById('cfgread').textContent=S.completed.size;
-  document.getElementById('remtime').value=S.remTime;
-  const tog=document.getElementById('remtog');
-  tog.className='tog'+(S.remOn?' on':'');
-  document.getElementById('remsub').textContent=S.remOn?`Ativo às ${S.remTime}`:'Desativado';
-  document.getElementById('remtimebox').style.display=S.remOn?'flex':'none';
+// ═══════════════════════ CONFIG ═══════════════════════
+function renderCfg() {
+  $('cfgname').value = S.name;
+  $('cfgstart').value = S.start;
+  $('remtime').value = S.remTime;
+  document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === S.mode));
+  $('modedesc').textContent = S.mode === 'igreja'
+    ? 'Você segue o mesmo calendário da igreja: todos leem a mesma passagem no mesmo dia.'
+    : 'Seu plano começou na data abaixo. O ritmo é seu.';
+}
+$('cfgname').addEventListener('input', e => { S.name = e.target.value.trim(); save(); renderHome(); });
+$('remtime').addEventListener('change', e => { S.remTime = e.target.value || '07:00'; save(); });
+$('cfgstart').addEventListener('change', e => {
+  if (!e.target.value) return;
+  S.start = e.target.value; save(); renderAll(); renderCfg(); toast('Início do plano atualizado');
+});
+function switchMode(m) {
+  if (m === S.mode) return;
+  const newStart = m === 'igreja' ? `${new Date().getFullYear()}-01-01` : todayISO();
+  const msg = m === 'igreja'
+    ? 'Seguir o calendário da igreja? O Dia 1 passa a ser 1º de janeiro. Suas leituras marcadas continuam salvas.'
+    : 'Começar no seu ritmo? O Dia 1 passa a ser hoje. Suas leituras marcadas continuam salvas.';
+  if (!confirm(msg)) return;
+  S.mode = m; S.start = newStart; save(); renderAll(); renderCfg();
+  toast(m === 'igreja' ? 'Agora você segue o calendário da igreja' : 'Agora é no seu ritmo — hoje é o Dia 1');
+}
+document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => switchMode(b.dataset.mode)));
+$('catch-mode').addEventListener('click', () => switchMode('pessoal'));
+
+// Lembrete: evento diário no calendário (.ics) — funciona sem servidor
+$('btnics').addEventListener('click', () => {
+  const [hh, mm] = (S.remTime || '07:00').split(':');
+  const first = new Date(); if (new Date().getHours() * 60 + new Date().getMinutes() >= +hh * 60 + +mm) first.setDate(first.getDate() + 1);
+  const d = `${first.getFullYear()}${pad(first.getMonth() + 1)}${pad(first.getDate())}T${hh}${mm}00`;
+  const left = Math.max(1, 365 - todayDay() + 1);
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Zion Church//Biblia 365//PT','CALSCALE:GREGORIAN','BEGIN:VEVENT',
+    `UID:b365-${Date.now()}@zionchurch.org.br`,`DTSTAMP:${stamp}`,`DTSTART:${d}`,'DURATION:PT15M',
+    `RRULE:FREQ=DAILY;COUNT=${left}`,'SUMMARY:📖 Leitura bíblica — Bíblia 365',
+    'DESCRIPTION:Hora da leitura do dia. Abra o app Bíblia 365.',
+    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Hora da leitura bíblica','TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  download('lembrete-biblia365.ics', ics, 'text/calendar');
+  toast('Abra o arquivo para adicionar ao calendário');
+});
+
+// Backup
+function download(name, text, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type}));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+$('btnexport').addEventListener('click', () => {
+  download(`biblia365-backup-${todayISO()}.json`, JSON.stringify({app: 'biblia365', ...S}, null, 1), 'application/json');
+  toast('Backup salvo');
+});
+$('btnimport').addEventListener('click', () => $('importfile').click());
+$('importfile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    if (d.app !== 'biblia365' || typeof d.done !== 'object') throw new Error('arquivo inválido');
+    if (!confirm(`Restaurar backup com ${Object.keys(d.done).length} leituras? O progresso atual será substituído.`)) return;
+    delete d.app; S = {...S, ...d, onboarded: true}; save(); renderAll(); renderCfg(); toast('Backup restaurado');
+  } catch (err) { toast('Não foi possível ler o backup'); }
+  e.target.value = '';
+});
+$('btnshare').addEventListener('click', async () => {
+  const st = stats();
+  const txt = `📖 Bíblia 365 · Zion Church\n${S.name ? S.name + ': ' : ''}${st.total}/365 leituras (${Math.round(st.total / 365 * 100)}%)\n🔥 Sequência: ${st.cur} dias (recorde ${st.best})\n📚 ${st.chapters} capítulos lidos · nível ${levelOf(st.xp).name}`;
+  try { if (navigator.share) await navigator.share({text: txt}); else { await navigator.clipboard.writeText(txt); toast('Resumo copiado'); } } catch (e) {}
+});
+$('btnreset').addEventListener('click', () => {
+  if (!confirm('Apagar todo o progresso? Dica: faça um backup antes. Esta ação não pode ser desfeita.')) return;
+  S.done = {}; S.celebrated = []; save(); renderAll(); nav('home'); toast('Progresso zerado');
+});
+
+// ═══════════════════════ MODAL DO DIA ═══════════════════════
+let mDay = null;
+const dm = $('daymodal');
+function openDay(d) {
+  mDay = d; const t = todayDay();
+  $('dm-lbl').textContent = `📖 Dia ${d} · ${WD[planDate(d).getDay()]}, ${fmtShort(planDate(d))}`;
+  $('dm-reading').textContent = READINGS[d - 1];
+  $('dm-sect').textContent = `${sectionOf(d)} · ${chaptersOf(d)} ${chaptersOf(d) > 1 ? 'capítulos' : 'capítulo'}`;
+  $('dm-note').textContent = isDone(d) ? `Lido em ${fmtShort(parseISO(S.done[d]))}.` : d > t ? 'Leitura futura — você pode adiantar se quiser.' : d < t ? 'Leitura pendente.' : 'Leitura de hoje.';
+  $('dm-open').href = readingURL(d);
+  const b = $('dm-btn');
+  b.textContent = isDone(d) ? '✓ Lido — toque para desfazer' : 'Marcar como lido ✓';
+  b.className = 'btn ' + (isDone(d) ? 'btn-done' : 'btn-gold');
+  dm.classList.add('show'); setTimeout(() => b.focus(), 50);
+}
+function closeDay() { dm.classList.remove('show'); mDay = null; }
+dm.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeDay));
+$('dm-btn').addEventListener('click', e => { if (mDay == null) return; toggleDay(mDay, e.currentTarget); openDay(mDay); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDay(); if ($('cel').classList.contains('show')) closeCel(); } });
+
+// ═══════════════════════ BOAS-VINDAS ═══════════════════════
+let obMode = 'igreja';
+function showOnboard() {
+  $('ob-igreja-d').textContent = `Mesma leitura que a igreja, no calendário de ${new Date().getFullYear()}. Hoje é o Dia ${Math.max(1, Math.min(365, daysBetween(`${new Date().getFullYear()}-01-01`, todayISO()) + 1))}; leituras anteriores ficam como pendentes.`;
+  $('onboard').classList.add('show');
+}
+document.querySelectorAll('[data-obmode]').forEach(b => b.addEventListener('click', () => {
+  obMode = b.dataset.obmode;
+  document.querySelectorAll('[data-obmode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+}));
+$('ob-go').addEventListener('click', () => {
+  S.name = $('ob-name').value.trim(); S.mode = obMode;
+  S.start = obMode === 'igreja' ? `${new Date().getFullYear()}-01-01` : todayISO();
+  S.onboarded = true; save(); $('onboard').classList.remove('show'); renderAll();
+});
+
+// ═══════════════════════ FEEDBACK ═══════════════════════
+let tt;
+function toast(m) { const el = $('toast'); el.textContent = m; el.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('show'), 2600); }
+function spawnXpFloat(x, y, t) {
+  const el = document.createElement('div'); el.className = 'xpfloat'; el.textContent = t;
+  el.style.left = (x - 30) + 'px'; el.style.top = (y - 20) + 'px';
+  document.body.appendChild(el); el.addEventListener('animationend', () => el.remove());
+}
+const celQ = []; let celOn = false;
+function celebrate(icon, title, msg) { celQ.push({icon, title, msg}); if (!celOn) nextCel(); }
+function nextCel() {
+  if (!celQ.length) { celOn = false; return; }
+  celOn = true; const c = celQ.shift();
+  $('celicon').textContent = c.icon; $('celtitle').textContent = c.title; $('celmsg').textContent = c.msg;
+  $('cel').classList.add('show'); setTimeout(() => $('celclose').focus(), 50); particles();
+}
+function closeCel() { $('cel').classList.remove('show'); setTimeout(nextCel, 350); }
+$('celclose').addEventListener('click', closeCel);
+function particles() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = $('ptcl'), ctx = cv.getContext('2d'); cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ['#C8A020', '#E8C84A', '#FFD700', '#FFF3A0', '#FFFFFF'];
+  const ps = Array.from({length: 60}, () => ({x: Math.random() * cv.width, y: cv.height + 10, vx: (Math.random() - .5) * 4, vy: -(Math.random() * 8 + 4), r: Math.random() * 4 + 2, c: cols[Math.floor(Math.random() * 5)], a: 1, rot: Math.random() * 360, rv: (Math.random() - .5) * 8}));
+  (function f() {
+    ctx.clearRect(0, 0, cv.width, cv.height); let alive = false;
+    for (const p of ps) { p.x += p.vx; p.y += p.vy; p.vy += .2; p.a -= .012; p.rot += p.rv;
+      if (p.a > 0) { alive = true; ctx.save(); ctx.globalAlpha = p.a; ctx.fillStyle = p.c; ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180); ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2); ctx.restore(); } }
+    if (alive) requestAnimationFrame(f); else ctx.clearRect(0, 0, cv.width, cv.height);
+  })();
 }
 
-function saveName(v){S.name=v.trim();save();renderHome();}
-
-function toggleReminder(){
-  S.remOn=!S.remOn;save();renderCfg();
-  if(S.remOn&&'Notification' in window) Notification.requestPermission();
+// ═══════════════════════ INIT ═══════════════════════
+function renderAll() {
+  renderHome();
+  if (cur === 'plano') renderPlano(false);
+  if (cur === 'prog') renderProg();
+  if (cur === 'conq') renderConq();
 }
-
-function saveReminderTime(v){S.remTime=v;save();renderCfg();}
-
-function exportProgress(){
-  const lines=['Bíblia 365 — Progresso de Leitura','Zion Church 2026','',
-    `Dias lidos: ${S.completed.size}/365`,
-    `Sequência atual: ${S.streak} dias`,
-    `Melhor sequência: ${S.bestStreak} dias`,
-    `XP: ${S.xp}`,`Nível: ${getLevel().name}`,'',
-    '=== Dias Concluídos ==='
-  ];
-  const sorted=[...S.completed].sort((a,b)=>a-b);
-  sorted.forEach(d=>lines.push(`Dia ${d} (${dayDate(d)}): ${READINGS[d-1]}`));
-  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='biblia365-progresso.txt';
-  a.click();
-  toast('Progresso exportado!');
-}
-
-function confirmReset(){
-  if(confirm('Tem certeza? Todo o seu progresso será apagado. Esta ação não pode ser desfeita.')){
-    S={completed:new Set(),bestStreak:0,xp:0,name:S.name,remOn:S.remOn,remTime:S.remTime,unlockedBadges:new Set()};
-    save();renderHome();nav('home');toast('Progresso zerado');
-  }
-}
-
-// ════════════════════════════════════
-// TOAST
-// ════════════════════════════════════
-let toastTimer;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),2500);
-}
-
-// ════════════════════════════════════
-// CELEBRATE
-// ════════════════════════════════════
-let celQueue=[];let celShowing=false;
-function celebrate(icon,title,msg){
-  celQueue.push({icon,title,msg});
-  if(!celShowing) showNextCel();
-}
-function showNextCel(){
-  if(!celQueue.length){celShowing=false;return;}
-  celShowing=true;
-  const {icon,title,msg}=celQueue.shift();
-  document.getElementById('celicon').textContent=icon;
-  document.getElementById('celtitle').textContent=title;
-  document.getElementById('celmsg').textContent=msg;
-  document.getElementById('cel').classList.add('show');
-  launchParticles();
-}
-function closeCel(){
-  document.getElementById('cel').classList.remove('show');
-  setTimeout(showNextCel,400);
-}
-
-// ════════════════════════════════════
-// PARTICLES
-// ════════════════════════════════════
-function launchParticles(){
-  const canvas=document.getElementById('ptcl');
-  const ctx=canvas.getContext('2d');
-  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  const pts=Array.from({length:60},()=>({
-    x:Math.random()*canvas.width,y:canvas.height+10,
-    vx:(Math.random()-.5)*4,vy:-(Math.random()*8+4),
-    r:Math.random()*5+2,
-    c:['#C8A020','#E8C84A','#FFD700','#FFF3A0','#FFFFFF'][Math.floor(Math.random()*5)],
-    alpha:1,rot:Math.random()*360,rotV:(Math.random()-.5)*8
-  }));
-  let af;function anim(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    let alive=false;
-    for(const p of pts){
-      p.x+=p.vx;p.y+=p.vy;p.vy+=0.2;p.alpha-=0.012;p.rot+=p.rotV;
-      if(p.alpha>0){alive=true;ctx.save();ctx.globalAlpha=p.alpha;ctx.fillStyle=p.c;
-        ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
-        ctx.fillRect(-p.r,-p.r,p.r*2,p.r*2);ctx.restore();}
-    }
-    if(alive) af=requestAnimationFrame(anim);
-    else ctx.clearRect(0,0,canvas.width,canvas.height);
-  }
-  cancelAnimationFrame(af);anim();
-}
-
-// ════════════════════════════════════
-// PWA MANIFEST
-// ════════════════════════════════════
-function injectManifest(){
-  const m={
-    name:"Bíblia 365 · Zion",short_name:"Bíblia 365",
-    start_url:".",display:"standalone",
-    background_color:"#080603",theme_color:"#080603",
-    icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%23080603'/><text x='256' y='340' font-size='300' text-anchor='middle'>📖</text></svg>",sizes:"any",type:"image/svg+xml"}]
-  };
-  const blob=new Blob([JSON.stringify(m)],{type:'application/json'});
-  const link=document.createElement('link');
-  link.rel='manifest';link.href=URL.createObjectURL(blob);
-  document.head.appendChild(link);
-}
-
-// ════════════════════════════════════
-// INIT
-// ════════════════════════════════════
 load();
-// ════════════════════════════════════
-// MODAL DIA
-// ════════════════════════════════════
-let modalDay=null;
-function openDayModal(d){
-  modalDay=d;
-  const done=S.completed.has(d);
-  document.getElementById('dm-lbl').textContent=`📖 DIA ${d} · ${dayDate(d)}`;
-  document.getElementById('dm-reading').textContent=READINGS[d-1];
-  document.getElementById('dm-sect').textContent=sectionOf(d);
-  const btn=document.getElementById('dm-btn');
-  if(done){
-    btn.textContent='✓ Lido — clique para desmarcar';
-    btn.className='dmbtn unmark';
-  } else {
-    btn.textContent='Marcar como lido ✓';
-    btn.className='dmbtn mark';
-  }
-  document.getElementById('daymodal').classList.add('show');
+renderAll();
+if (!S.onboarded) showOnboard();
+// Atualiza ao virar o dia com o app aberto
+let lastDay = todayISO();
+setInterval(() => { if (todayISO() !== lastDay) { lastDay = todayISO(); renderAll(); } }, 60e3);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) renderAll(); });
+
+// PWA: service worker e manifest reais (arquivos sw.js e manifest.json ao lado deste)
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('./sw.js').catch(e => console.warn('SW:', e.message));
 }
-function closeDayModal(){
-  document.getElementById('daymodal').classList.remove('show');
-  modalDay=null;
-}
-function toggleDayFromModal(){
-  if(modalDay===null) return;
-  // XP float animation
-  const btn=document.getElementById('dm-btn');
-  const rect=btn.getBoundingClientRect();
-  const wasCompleted=S.completed.has(modalDay);
-  if(!wasCompleted){
-    spawnXpFloat(rect.left+rect.width/2, rect.top, '+15 XP');
-  }
-  toggleDay(modalDay);
-  // update modal state
-  const done=S.completed.has(modalDay);
-  if(done){
-    btn.textContent='✓ Lido — clique para desmarcar';
-    btn.className='dmbtn unmark';
-  } else {
-    btn.textContent='Marcar como lido ✓';
-    btn.className='dmbtn mark';
-  }
-}
-
-// ════════════════════════════════════
-// XP FLOAT
-// ════════════════════════════════════
-function spawnXpFloat(x,y,txt){
-  const el=document.createElement('div');
-  el.className='xpfloat';
-  el.textContent=txt;
-  el.style.left=(x-30)+'px';
-  el.style.top=(y-20)+'px';
-  document.body.appendChild(el);
-  el.addEventListener('animationend',()=>el.remove());
-}
-
-// ════════════════════════════════════
-// SWIPE ENTRE ABAS
-// ════════════════════════════════════
-const NAV_ORDER=['home','plano','prog','conq','cfg'];
-let swipeStartX=0,swipeStartY=0,swipeLocked=false;
-document.getElementById('app').addEventListener('touchstart',e=>{
-  swipeStartX=e.touches[0].clientX;
-  swipeStartY=e.touches[0].clientY;
-  swipeLocked=false;
-},{passive:true});
-document.getElementById('app').addEventListener('touchend',e=>{
-  if(swipeLocked) return;
-  const dx=e.changedTouches[0].clientX-swipeStartX;
-  const dy=e.changedTouches[0].clientY-swipeStartY;
-  if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*0.8) return;
-  const idx=NAV_ORDER.indexOf(curScreen);
-  if(dx<0&&idx<NAV_ORDER.length-1) nav(NAV_ORDER[idx+1]); // swipe left → próxima
-  if(dx>0&&idx>0) nav(NAV_ORDER[idx-1]); // swipe right → anterior
-},{passive:true});
-// Bloquear swipe dentro de listas com scroll horizontal (mtabs)
-document.getElementById('mtabs').addEventListener('touchstart',()=>{swipeLocked=true;},{passive:true});
-
-// ════════════════════════════════════
-// SERVICE WORKER INLINE
-// ════════════════════════════════════
-if('serviceWorker' in navigator){
-  const swCode=`
-const CACHE='biblia365-v1';
-const ASSETS=[self.location.href];
-self.addEventListener('install',e=>e.waitUntil(
-  caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())
-));
-self.addEventListener('activate',e=>e.waitUntil(
-  caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
-  .then(()=>self.clients.claim())
-));
-self.addEventListener('fetch',e=>e.respondWith(
-  caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
-    if(res.ok&&e.request.method==='GET'){
-      const clone=res.clone();
-      caches.open(CACHE).then(c=>c.put(e.request,clone));
-    }
-    return res;
-  }).catch(()=>caches.match(e.request)))
-));`;
-  const blob=new Blob([swCode],{type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'})
-    .catch(()=>{}); // blob SW falha em alguns browsers — silencioso
-}
-
-injectManifest();
-renderHome();
-
-// Build month tabs on init
-renderPlano();
-
-// Auto-scroll month tabs to current month
-setTimeout(()=>{
-  const tabs=document.getElementById('mtabs');
-  const active=tabs.querySelector('.mtab.on');
-  if(active) active.scrollIntoView({behavior:'smooth',inline:'center'});
-},200);
 </script>
 </body>
 </html>
