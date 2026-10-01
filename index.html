@@ -268,6 +268,11 @@ button.citem:active{background:var(--bg2)}
 .topmsg{margin:24px 18px;text-align:center;color:var(--dim);font-size:14px;line-height:1.6}
 .topmsg .btn{margin-top:14px}
 
+/* ── ATUALIZAÇÃO ── */
+.upd{display:flex;align-items:center;gap:12px;margin-top:14px;margin-bottom:0;padding:14px 16px;border-color:rgba(63,182,201,.45);background:linear-gradient(160deg,var(--tealdim),var(--bg1) 70%)}
+.upd .cil b{display:block;font-size:14.5px}
+.upd .cil span{font-size:12.5px;color:var(--dim)}
+
 /* ── TOAST ── */
 #toast{position:fixed;bottom:calc(var(--nav) + env(safe-area-inset-bottom) + 14px);left:50%;transform:translate(-50%,14px);
   background:var(--gold);color:#080603;padding:11px 18px;border-radius:12px;font-size:13.5px;font-weight:700;
@@ -322,6 +327,11 @@ canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
     <h1 class="htitle" id="htitle">Leitura de Hoje</h1>
     <div class="hmeta" id="hmeta"></div>
   </div>
+
+  <section class="card upd" id="upd" hidden aria-live="polite">
+    <div class="cil"><b>Nova versão disponível</b><span>Seu progresso é mantido.</span></div>
+    <button class="btn btn-gold mini" id="updgo">Atualizar</button>
+  </section>
 
   <div class="statsrow">
     <div class="spill"><div class="v" id="s-read">0</div><div class="l">lidos</div></div>
@@ -488,7 +498,13 @@ canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
     </button>
     <p class="cis" style="margin:4px 4px 16px">Seu progresso fica salvo só neste aparelho. Faça um backup de vez em quando.</p>
 
-    <button class="btn btn-danger" id="btnreset">Zerar progresso</button>
+    <h3>Aplicativo</h3>
+    <button class="citem" id="btnupd">
+      <div class="cil"><div class="cit" id="updcfg-t">Verificar atualização</div><div class="cis" id="updcfg-s">Busca a versão mais recente do app. Seu progresso é mantido.</div></div>
+      <span class="carrow" aria-hidden="true">⟳</span>
+    </button>
+
+    <button class="btn btn-danger" id="btnreset" style="margin-top:14px">Zerar progresso</button>
   </div>
   <div class="foot">Bíblia 365 · Zion Church<br><span style="color:var(--golddim);letter-spacing:8px">✦ ✦ ✦</span><br>zionchurch.org.br</div>
 </section>
@@ -1218,6 +1234,59 @@ if (!S.onboarded) showOnboard();
 let lastDay = todayISO();
 setInterval(() => { if (todayISO() !== lastDay) { lastDay = todayISO(); renderAll(); } }, 60e3);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) renderAll(); });
+
+// ═══════════════════════ ATUALIZAÇÃO DO APP ═══════════════════════
+// Compara o index.html e o topicos.json publicados com os que este app carregou.
+// Não precisa mexer em número de versão: basta subir os arquivos novos no repositório.
+const UPD_FILES = [location.pathname, './topicos.json'];
+const UPD_ON = location.protocol.startsWith('http');
+const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return t.length + ':' + h; };
+async function appSig(mode) {
+  const parts = await Promise.all(UPD_FILES.map(async u => {
+    const r = await fetch(u, { cache: mode }); if (!r.ok) throw new Error(r.status);
+    return hashStr(await r.text());
+  }));
+  return parts.join('|');
+}
+let updBase = null, updReady = false, updLast = 0, updBusy = false;
+function showUpdate() {
+  $('upd').hidden = !updReady;
+  $('updcfg-t').textContent = updReady ? 'Atualizar agora' : 'Verificar atualização';
+  $('updcfg-s').textContent = updReady ? 'Há uma nova versão disponível. Seu progresso é mantido.' : 'Busca a versão mais recente do app. Seu progresso é mantido.';
+}
+async function checkUpdate(manual) {
+  if (!UPD_ON || updBusy) return;
+  if (!navigator.onLine) { if (manual) toast('Sem conexão. Tente de novo quando estiver online.'); return; }
+  updBusy = true;
+  try {
+    if (!updBase) updBase = await appSig('default');
+    const was = updReady;
+    updReady = (await appSig('no-store')) !== updBase;
+    updLast = Date.now(); showUpdate();
+    if (manual && !updReady) toast('Você já está na versão mais recente');
+    if (manual && updReady) { updBusy = false; return applyUpdate(); }   // pediu para verificar e há versão nova: já atualiza
+    if (updReady && !was) toast('Nova versão disponível');
+  } catch (e) { if (manual) toast('Não foi possível verificar agora'); }
+  updBusy = false;
+}
+async function applyUpdate() {
+  toast('Atualizando…');
+  try {
+    // baixa os arquivos novos ignorando o cache e renova o service worker antes de recarregar
+    await Promise.all([...UPD_FILES, './manifest.json'].map(u => fetch(u, { cache: 'reload' })));
+    const reg = 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistration() : null;
+    if (reg) await reg.update();
+  } catch (e) {}
+  location.reload();
+}
+$('updgo').addEventListener('click', applyUpdate);
+$('btnupd').addEventListener('click', async () => { if (updReady) return applyUpdate(); await checkUpdate(true); });
+if (UPD_ON) {
+  appSig('default').then(sig => { updBase = sig; }).catch(() => {});   // versão que este app carregou
+  // verifica ao voltar para o app (no máximo a cada 15 min) e de hora em hora com ele aberto
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - updLast > 15 * 60e3) checkUpdate(false); });
+  setInterval(() => { if (!document.hidden) checkUpdate(false); }, 60 * 60e3);
+}
 
 // PWA: service worker e manifest reais (arquivos sw.js e manifest.json ao lado deste)
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
