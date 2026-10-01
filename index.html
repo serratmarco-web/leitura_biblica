@@ -50,6 +50,8 @@ button{cursor:pointer}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   background:none;border:none;color:var(--dim);font-size:11px;font-weight:500;transition:color .2s}
 .nb svg{width:22px;height:22px}
+#bnav .nb{font-size:10.5px;min-width:0}
+@media (max-width:340px){#bnav .nb{font-size:9.5px}}
 .nb[aria-current="page"]{color:var(--gold2)}
 .nb[aria-current="page"] svg{filter:drop-shadow(0 0 6px rgba(200,160,32,.5))}
 
@@ -247,6 +249,25 @@ button.citem:active{background:var(--bg2)}
 .seg button[aria-pressed="true"]{background:var(--gold);color:#080603}
 .foot{text-align:center;padding:16px 22px 24px;color:var(--dim2);font-size:12px;line-height:2}
 
+/* ── TÓPICOS ── */
+.topback{padding:0 0 6px;min-height:36px}
+.topbody{padding:14px 0 8px}
+.topbody .label{display:block;padding:0 18px;margin:14px 0 10px}
+.topbody .label:first-child{margin-top:4px}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:0 18px}
+.tpc{background:var(--bg1);border:1px solid var(--border);border-radius:14px;padding:13px 6px 11px;text-align:center;min-height:82px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12.5px;font-weight:600;line-height:1.2}
+.tpc:active{background:var(--bg2);border-color:var(--border2)}
+.tpc .ic{font-size:24px;line-height:1}
+.vcard{margin:0 18px 12px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px 8px}
+.vcard .ref{font-size:11.5px;letter-spacing:.1em;color:var(--gold);font-weight:600;text-transform:uppercase;margin-bottom:8px}
+.vcard p{font-family:var(--ff);font-size:17px;line-height:1.6}
+.apoio{margin:4px 18px 12px;border:1px solid rgba(63,182,201,.4);background:var(--tealdim);border-radius:var(--r);padding:14px 16px;font-size:13.5px;line-height:1.55}
+.apoio a{color:var(--teal);font-weight:700}
+.credit{text-align:center;font-size:12px;color:var(--dim2);padding:12px 22px 4px;line-height:1.5}
+.topmsg{margin:24px 18px;text-align:center;color:var(--dim);font-size:14px;line-height:1.6}
+.topmsg .btn{margin-top:14px}
+
 /* ── TOAST ── */
 #toast{position:fixed;bottom:calc(var(--nav) + env(safe-area-inset-bottom) + 14px);left:50%;transform:translate(-50%,14px);
   background:var(--gold);color:#080603;padding:11px 18px;border-radius:12px;font-size:13.5px;font-weight:700;
@@ -360,6 +381,16 @@ canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
   <div class="plist" id="plist"></div>
 </section>
 
+<!-- ═════════ TÓPICOS ═════════ -->
+<section id="s-topicos" class="screen" aria-labelledby="top-t">
+  <div class="shdr">
+    <button class="btn-link topback" id="topback" hidden>← Tópicos</button>
+    <h1 class="stitle" id="top-t">Tópicos</h1>
+    <div class="ssub" id="topsub"></div>
+  </div>
+  <div class="topbody" id="topbody"></div>
+</section>
+
 <!-- ═════════ PROGRESSO ═════════ -->
 <section id="s-prog" class="screen" aria-labelledby="prog-t">
   <div class="shdr"><h1 class="stitle" id="prog-t">Progresso</h1><div class="ssub" id="progsub"></div></div>
@@ -465,6 +496,7 @@ canvas#ptcl{position:fixed;inset:0;pointer-events:none;z-index:350}
 <nav id="bnav" aria-label="Navegação principal">
   <button class="nb" data-nav="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Início</button>
   <button class="nb" data-nav="plano"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>Plano</button>
+  <button class="nb" data-nav="topicos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"/></svg>Tópicos</button>
   <button class="nb" data-nav="prog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Progresso</button>
   <button class="nb" data-nav="conq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>Conquistas</button>
   <button class="nb" data-nav="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Config</button>
@@ -717,7 +749,7 @@ function toggleDay(d, fromEl) {
 
 // ═══════════════════════ NAVEGAÇÃO ═══════════════════════
 let cur = 'home';
-const NAV_ORDER = ['home', 'plano', 'prog', 'conq', 'cfg'];
+const NAV_ORDER = ['home', 'plano', 'topicos', 'prog', 'conq', 'cfg'];
 function nav(id) {
   if (id === cur) return;
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -726,6 +758,7 @@ function nav(id) {
   document.querySelector(`[data-nav="${id}"]`).setAttribute('aria-current', 'page');
   cur = id;
   if (id === 'plano') renderPlano(true);
+  if (id === 'topicos') renderTop();
   if (id === 'prog') renderProg();
   if (id === 'conq') renderConq();
   if (id === 'cfg') renderCfg();
@@ -905,6 +938,60 @@ function renderPlano(reset) {
     tabs.querySelector('[aria-pressed="true"]')?.scrollIntoView({inline: 'center', block: 'nearest'});
     list.querySelector('.pdn.today')?.scrollIntoView({block: 'center'});
   }, 60);
+}
+
+// ═══════════════════════ TÓPICOS ═══════════════════════
+// ./topicos.json → categorias + tópicos. Cada referência já traz o texto: { "ref": "sl 34:18", "texto": "..." }
+const NAME_OF = Object.fromEntries(Object.keys(ABBR).map(n => [ABBR[n], n]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+let TOP = null, topId = null; // topId: null = lista de tópicos; senão, o tópico aberto
+
+async function loadTopics() {
+  if (!TOP) { const r = await fetch('./topicos.json'); if (!r.ok) throw new Error(r.status); TOP = await r.json(); }
+  return TOP;
+}
+function parseRef(ref) {
+  const m = String(ref).trim().match(/^(\S+)\s+(\d+):(\d+)(?:-(\d+))?$/);
+  if (!m) return null;
+  const sig = m[1].toLowerCase() === 'job' ? 'jó' : m[1].toLowerCase();
+  return { sig, cap: +m[2], ini: +m[3], fim: +(m[4] || m[3]) };
+}
+const refLabel = r => `${NAME_OF[r.sig] || r.sig} ${r.cap}:${r.ini}${r.fim > r.ini ? '-' + r.fim : ''}`;
+const refURL = r => `https://www.bibliaonline.com.br/acf/${encodeURIComponent(r.sig)}/${r.cap}`;
+function topGo(id) { topId = id; renderTop(); }
+$('topback').addEventListener('click', () => topGo(null));
+
+async function renderTop() {
+  const body = $('topbody'), scr = $('s-topicos');
+  try {
+    const T = await loadTopics();
+    const t = topId && T.topicos.find(x => x.id === topId);
+    $('topback').hidden = !t;
+    if (!t) {
+      topId = null;
+      $('top-t').textContent = 'Tópicos'; $('topsub').textContent = 'O que a Palavra diz sobre…';
+      body.innerHTML = [...T.categorias].sort((a, b) => a.ordem - b.ordem).map(c => {
+        const ts = T.topicos.filter(x => x.categoria === c.id);
+        return ts.length ? `<span class="label">${esc(c.titulo)}</span><div class="tgrid">${ts.map(x =>
+          `<button class="tpc" data-topic="${esc(x.id)}"><span class="ic" aria-hidden="true">${esc(x.icone || '📖')}</span>${esc(x.titulo)}</button>`).join('')}</div>` : '';
+      }).join('');
+      body.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => topGo(b.dataset.topic));
+    } else {
+      // aceita { ref, texto } ou só a referência em texto ("sl 34:18")
+      const items = t.refs.map(x => typeof x === 'string' ? { ref: x, texto: '' } : x).map(x => ({ r: parseRef(x.ref), texto: x.texto || '' })).filter(x => x.r);
+      $('top-t').textContent = `${t.icone || ''} ${t.titulo}`.trim();
+      $('topsub').textContent = `${items.length} texto${items.length > 1 ? 's' : ''} bíblico${items.length > 1 ? 's' : ''}`;
+      body.innerHTML = items.map(i => `<article class="vcard">
+          <div class="ref">${esc(refLabel(i.r))}</div>${i.texto ? `<p>${esc(i.texto)}</p>` : ''}
+          <a class="btn-link" href="${refURL(i.r)}" target="_blank" rel="noopener">Abrir capítulo na Bíblia Online ↗</a></article>`).join('')
+        + (t.apoio ? `<div class="apoio">Se você está passando por um momento difícil, não enfrente isso sozinho: converse com alguém de confiança e procure ajuda. <b>CVV — ligue <a href="tel:188">188</a></b> (24 horas, gratuito).</div>` : '')
+        + (T.versao ? `<p class="credit">Texto: ${esc(T.versao)}</p>` : '');
+    }
+    scr.scrollTop = 0;
+  } catch (e) {
+    body.innerHTML = `<div class="topmsg">Não foi possível carregar os tópicos.<br>Verifique sua conexão e tente de novo.<br><button class="btn btn-ghost" id="topretry">Tentar de novo</button></div>`;
+    $('topretry').onclick = renderTop;
+  }
 }
 
 // ═══════════════════════ PROGRESSO ═══════════════════════
